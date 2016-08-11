@@ -16,7 +16,7 @@ void WsTask::run(){
     ufBlock list = getStep();
     getRange(list);
 
-    std::cout << (step->PeriodStop - step->PeriodStart) << "^^" << trade->size() << " : " << depth->size() << std::endl;
+    std::cout << "WsTask" <<  list->size() << std::endl;
 
     emit response(step, result);
 }
