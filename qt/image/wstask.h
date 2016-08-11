@@ -20,19 +20,22 @@ public slots:
     void run();
 
 private:
+    umBlock             tmpUser;
     iTask               *step;
     iRate               rate;
     iTaskResult         *result;
     iTradesData         *trade;
     QHash<uint,iDepth>  *depth;
     QHash <int, strTable> lastAsc;
-    QVector <tmpTable>  rateUser;
+    QVector<tmpTable>  rateUser;
     QVector< strResponse > rangeUser;
-    QMap<uint, infoBlock>  tmpUser;
 
     void getMax();
     ufBlock getStep();
     void getRange(ufBlock &listDepth);
+    void updTmpTable(ufBlock &rest);
+    void subRange();
+    QVector <strTable> reRange();
 };
 
 #endif // WSTASK_H

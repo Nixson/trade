@@ -4,6 +4,7 @@
 
 #include <QVector>
 #include <QHash>
+#include <QMap>
 #include <QDataStream>
 
 typedef struct iPair_str {
@@ -88,6 +89,7 @@ QDataStream &operator>>(QDataStream &out, Trade_struct &str);
 
 typedef QVector<iPair> iPairs;
 typedef QHash<uint, infoBlock> ufBlock;
+typedef QMap<uint, infoBlock> umBlock;
 typedef QHash<QString, iPairs> iTypes;
 typedef QHash<QString, iTypes> iDepth;
 

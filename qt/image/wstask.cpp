@@ -1,6 +1,7 @@
 #include "wstask.h"
 #include "memory.h"
 #include <iostream>
+#include <QDateTime>
 
 WsTask::WsTask(iTask *stepTask, QObject *parent) : QObject(parent),
                                                    step(stepTask),
