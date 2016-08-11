@@ -1,0 +1,19 @@
+{
+	"gc": 60000,
+	"timeout": 10000,
+	"lpTimeout": 600000,
+	"mysql": {
+		"host" : "89.108.72.250",
+		"user": "root",
+		"password": "x0h0ifz_5fvznm",
+		"database": "trade_api",
+		"charset": "utf8_general_ci"
+	},
+	"url": {
+		"depth": "https://btc-e.nz/api/3/depth/btc_usd?limit=1000",
+		"trades": "https://btc-e.nz/api/3/trades/btc_usd?limit=1000"
+	},
+	"srv": {
+		"worker": 6500
+	}
+}

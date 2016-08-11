@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>График</title>
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet" />
+    <link rel="shortcut icon" href="/favicon.png">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+  <div class="container">
+  	<h1>Выберите параметры</h1>
+  	<form class="form">
+  <div class="form-group">
+    <label for="pair">Пара: </label>
+    <select id="pair" class="form-control">
+    	<option value="btc_usd">btc_usd</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="findRange"> Диапазон поиска максимума сделки: </label>
+    <input type="number" class="form-control" id="findRange" placeholder="В секундах">
+  </div>
+  <div class="form-group">
+    <label for="rate"> Коэффициент: </label>
+    <input type="number" class="form-control" id="rate" placeholder="d1">
+  </div>
+  <div class="form-group">
+    <label for="rate"> Процент реакции: </label>
+    <input type="number" class="form-control" id="proc" placeholder="">
+  </div>
+  <div class="row">
+  	<div class="col-xs-6">
+	  <button type="button" class="btn btn-default" onclick="work();">Получить</button>
+  	</div>
+  	<div class="col-xs-6 text-right">
+	  <button type="button" class="btn btn-danger" onclick="workStop();">Получить</button>
+  	</div>
+  </div>
+</form>
+<br />
+<div id="sTable"></div>
+<div class="row">
+	<div class="col-xs-7">
+		<div id="view"></div>
+	</div>
+	<div class="col-xs-5">
+		<div id="rtable"></div>
+	</div>
+</div>
+
+    <!--<h1>График за сутки</h1>
+  	<div class="row">
+  		<div class="col-xs-12" id="gr">
+  		</div>
+  	</div>
+  </div>-->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+	<!--<script language="javascript" type="text/javascript" src="/js/jquery.flot.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/jquery.flot.navigate.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/jquery.flot.time.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/jquery.flot.symbol.js"></script>-->
+	<script type="text/javascript">
+	var socket = new WebSocket("ws://trade.bhelp.com/ws");
+	socket.onopen = function() {
+		console.log("socket open");
+	};
+	socket.onclose = function() {
+		console.log("socket onclose");
+	};
+	socket.onmessage = function(msg) {
+		console.log("socket onmessage");
+		var sj = JSON.parse(msg.data);
+		var JR = sj.rate;
+		var lastPrice = 0;
+		var cnt = 0;
+		for(var str in JR){
+			var date = new Date(JR[str].dtime*1000);
+			var bLine = JR[str].price.split(',');
+			for(var lNum in bLine){
+				var strView = '';
+				var pos = "";
+				if(bLine[lNum]!=''){
+					var Price = parseFloat(bLine[lNum]);
+					if(Price > lastPrice)
+						pos = ">";
+					else if(Price < lastPrice)
+						pos = "<";
+					else
+						pos = "=";
+					lastPrice = Price;
+				}
+				strView +='<tr><td>';
+				strView+= date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+				strView +='</td><td>';
+				strView +=JR[str].asks;
+				strView +='</td><td>';
+				strView +=JR[str].bids;
+				strView +='</td><td>';
+				strView += JR[str].range;
+				strView +='</td><td>';
+				strView +=bLine[lNum];
+				strView +='</td><td>';
+				if(pos==">")
+					strView +="&#8593;";
+				else
+					strView +="&nbsp;";
+				strView +='</td><td>';
+				if(pos=="<")
+					strView +="&#8595;";
+				else
+					strView +="&nbsp;";
+				strView +='</td><td>';
+				if(pos=="=")
+					strView +="=";
+				else
+					strView +="&nbsp;";
+				strView +='</td></tr>';
+				$("#view table").html(strView);
+				cnt++;
+			}
+		}
+
+		//tab
+		
+		var stable = "";
+		var stableData = "";
+		var stableP = "";
+		var sub = 0;
+		for(var str in sj.tab){
+			if(sub==0)
+				stable += "<td colspan='3'>"+sj.tab[str].min.toFixed(3)+" - "+sj.tab[str].max.toFixed(3)+"</td>";
+			sub++;
+			if(sub >= 3)
+				sub = 0;
+				stableP += "<td>"+sj.tab[str].pos+"</td>";
+				//stableData += "<td>"+sj.tab[str].count+"</td>";
+			if(typeof sj.last.range!='undefined' && sj.last.range >= sj.tab[str].min && sj.last.range <= sj.tab[str].max){
+				var has = true;
+				if(typeof sj.last.asc!='undefined'){
+					if(sj.last.asc.min >= sj.tab[str].min && sj.last.asc.max <= sj.tab[str].max && sj.last.asc.pos==sj.tab[str].pos){
+						stableData += "<td style='background:#005500; color: #fff;'>"+sj.tab[str].count+"</td>";
+						has = false;
+					}
+				}
+				if(has){
+						stableData += "<td style='background:#333; color: #fff;'>"+sj.tab[str].count+"</td>";
+				}
+
+			}
+			else{
+				var has = true;
+				if(typeof sj.last.asc!='undefined'){
+					if(sj.last.asc.min >= sj.tab[str].min && sj.last.asc.max <= sj.tab[str].max && sj.last.asc.pos==sj.tab[str].pos){
+						stableData += "<td style='background:#005500; color: #fff;'>"+sj.tab[str].count+"</td>";
+						has = false;
+					}
+				}
+				if(has){
+						stableData += "<td>"+sj.tab[str].count+"</td>";
+				}
+			}
+
+		}
+		$("#sTable").html('<table class="table"><tr>'+stable+'</tr><tr>'+stableP+'</tr><tr>'+stableData+'</tr></table>');
+
+		if(typeof sj.rtables!='undefined'){
+			var resultG = 0;
+			var resultR = 0;
+			var cnt = 0;
+			$("#rtable").html('<table class="table"></table>');
+			/*for(var str in sj.rtables){
+				cnt++;
+			}*/
+			for(var str in sj.rtables){
+				var resp = "";
+				var date = new Date(sj.rtables[str].dtime*1000);
+				if(sj.rtables[str].response==1){
+					resultG++;
+					resp +='<tr style="background: #005500; color: #ffffff;"><td>';
+				}
+				else{
+					resultR++;
+					resp +='<tr style="background: #550000; color: #ffffff;"><td>';
+				}
+				resp+= date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+				resp +='</td><td>';
+				resp +=sj.rtables[str].price;
+				resp +='</td><td>';
+				resp +=sj.rtables[str].range;
+				resp +='</td></tr>';
+				//if(cnt < 10)
+				$("#rtable table").prepend(resp);
+				//cnt--;
+			}
+			resp = '<tr><td style="background: #005500; color: #ffffff;">'+resultG+'</td><td style="background: #550000; color: #ffffff;">'+resultR+'</td></tr>';
+			$("#rtable table").prepend(resp);
+		}
+
+
+
+
+		//last
+
+		//rtables
+
+	};
+	socket.onerror = function() {
+		console.log("socket onerror");
+	};
+	function workStop(){
+		socket.close();
+		socket = new WebSocket("ws://trade.bhelp.com/ws");
+	}
+	function work(){
+		var pair = $("#pair").val();
+		var findRange = $("#findRange").val();
+		var viewRange = $("#findRange").val();
+		var rate = $("#rate").val();
+		var proc = $("#proc").val();
+		$("#view").html('<table class="table"></table>');
+		socket.send(pair+";"+findRange+";"+ viewRange +";"+ rate+";"+proc);
+		/*var rangeCnt = 10;
+		$.get("/"+pair+"/",{findRange:findRange,viewRange:viewRange,rate:rate},function(resp){
+			if(typeof resp.response!='undefined'){
+				var summ = [];
+				var JR = JSON.parse(resp.response);
+				var strView = '<table class="table">';
+				var lastPrice = 0;
+				for(var str in JR){
+					var bLine = JR[str][3].split(', ');
+					var date = new Date(JR[str][0]*1000);
+					for(var lNum in bLine){
+						var pos = "";
+						if(bLine[lNum]!=''){
+							var ex = bLine[lNum].split('(');
+							var Price = parseFloat(ex[0]);
+							if(Price > lastPrice)
+								pos = ">";
+							else if(Price < lastPrice)
+								pos = "<";
+							else
+								pos = "=";
+							lastPrice = Price;
+						}
+						var JRrange = (parseFloat(JR[str][1])/parseFloat(JR[str][2])).toFixed(5);
+						if(pos!=''){
+							var noFind = true;
+							for(var sNum in summ){
+								if(summ[sNum][0]==JRrange && summ[sNum][2] == pos){
+									noFind = false;
+									summ[sNum][1]++;
+								}
+							}
+							if(noFind)
+								summ.push([JRrange,1,pos]);
+						}
+						strView +='<tr><td>';
+						strView+= date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+						strView +='</td><td>';
+						strView +=JR[str][1];
+						strView +='</td><td>';
+						strView +=JR[str][2];
+						strView +='</td><td>';
+						strView += JRrange;
+						strView +='</td><td>';
+						strView +=bLine[lNum];
+						strView +='</td><td>';
+						if(pos==">")
+							strView +="&#8593;";
+						else
+							strView +="&nbsp;";
+						strView +='</td><td>';
+						if(pos=="<")
+							strView +="&#8595;";
+						else
+							strView +="&nbsp;";
+						strView +='</td><td>';
+						if(pos=="=")
+							strView +="=";
+						else
+							strView +="&nbsp;";
+						strView +='</td></tr>';
+					}
+
+				}
+				if(summ.length > 0){
+					var min = parseFloat(summ[0][0]);
+					var max = 0.0;
+					for(var fs in summ){
+						var pf = parseFloat(summ[fs][0]);
+						if(min > pf)
+							min = pf;
+						if(max < pf)
+							max = pf;
+					}
+					var range = (max - min) /rangeCnt;
+					var ntab = '<table class="table">';
+					var subTitle = [];
+					var subRange = [];
+					var subVal = [];
+					for(var i = 0; i < rangeCnt; i++){
+						var selfMin = min + i*range;
+						var selfMax = min + (i+1)*range;
+						subTitle.push('<td colspan="3">'+selfMin.toFixed(3)+' - '+selfMax.toFixed(3)+'</td>');
+						subRange.push('<td><strong>&#8593;</strong></td><td><strong>&#8595;</strong></td><td><strong>=</strong></td>');
+						var sR = [0,0,0];
+						for(var sumNum in summ){
+							var pVal = parseFloat(summ[sumNum][0]);
+							if(pVal >= selfMin && pVal < selfMax ){
+								if(summ[sumNum][2]==">")
+									sR[0]++;
+								else if(summ[sumNum][2]=="<")
+									sR[1]++;
+								else
+									sR[2]++;
+							}
+						}
+						subVal.push('<td>'+sR[0]+'</td><td>'+sR[1]+'</td><td>'+sR[2]+'</td>');
+					}
+					ntab +='<tr>'+subTitle.join('')+'</tr>';
+					ntab +='<tr>'+subRange.join('')+'</tr>';
+					ntab +='<tr>'+subVal.join('')+'</tr>';
+					ntab +='</table>';
+					$("#sTable").html(ntab);
+				}
+				strView +='</table>';
+				$("#view").html(strView);
+			}
+		},"json");*/
+	}
+
+	</script>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+lib/*.json
+*~
+*.autosave
+*.a
+*.core
+*.moc
+*.o
+*.ob
+*.obj
+*.orig
+*.rej
+*.so
+*.so.*
+Thumbs.db
+*.dll
+*.exe
+*.pro.user*

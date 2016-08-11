@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>График</title>
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet" />
+    <link rel="shortcut icon" href="/favicon.png">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+  <div class="container">
+  	<h1>Выберите параметры</h1>
+  	<form class="form">
+  <div class="form-group">
+    <label for="pair">Пара: </label>
+    <select id="pair" class="form-control">
+    	<option value="btc_usd">btc_usd</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="findRange"> Диапазон поиска максимума сделки: </label>
+    <input type="number" class="form-control" id="findRange" placeholder="В секундах">
+  </div>
+  <div class="form-group">
+    <label for="viewRange"> Выводить последние: </label>
+    <input type="number" class="form-control" id="viewRange" placeholder="секунд">
+    сек.
+  </div>
+  <div class="form-group">
+    <label for="rate"> Коэффициент: </label>
+    <input type="number" class="form-control" id="rate" placeholder="d1">
+  </div>
+  <button type="button" class="btn btn-default" onclick="work();">Получить</button>
+</form>
+<br />
+<div id="sTable"></div>
+<div id="view"></div>
+    <!--<h1>График за сутки</h1>
+  	<div class="row">
+  		<div class="col-xs-12" id="gr">
+  		</div>
+  	</div>
+  </div>-->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/jquery.flot.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/jquery.flot.navigate.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/jquery.flot.time.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/jquery.flot.symbol.js"></script>
+	<script type="text/javascript">
+	function work(){
+		var pair = $("#pair").val();
+		var findRange = $("#findRange").val();
+		var viewRange = $("#viewRange").val();
+		var rate = $("#rate").val();
+		var rangeCnt = 10;
+		$("#sTable").html('');
+		$.get("/"+pair+"/",{findRange:findRange,viewRange:viewRange,rate:rate},function(resp){
+			if(typeof resp.response!='undefined'){
+				var summ = [];
+				var JR = JSON.parse(resp.response);
+				var strView = '<table class="table">';
+				var lastPrice = 0;
+				for(var str in JR){
+					var bLine = JR[str][3].split(', ');
+					var date = new Date(JR[str][0]*1000);
+					for(var lNum in bLine){
+						var pos = "";
+						if(bLine[lNum]!=''){
+							var ex = bLine[lNum].split('(');
+							var Price = parseFloat(ex[0]);
+							if(Price > lastPrice)
+								pos = ">";
+							else if(Price < lastPrice)
+								pos = "<";
+							else
+								pos = "=";
+							lastPrice = Price;
+						}
+						var JRrange = (parseFloat(JR[str][1])/parseFloat(JR[str][2])).toFixed(5);
+						if(pos!=''){
+							var noFind = true;
+							for(var sNum in summ){
+								if(summ[sNum][0]==JRrange && summ[sNum][2] == pos){
+									noFind = false;
+									summ[sNum][1]++;
+								}
+							}
+							if(noFind)
+								summ.push([JRrange,1,pos]);
+						}
+						strView +='<tr><td>';
+						strView+= date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+						strView +='</td><td>';
+						strView +=JR[str][1];
+						strView +='</td><td>';
+						strView +=JR[str][2];
+						strView +='</td><td>';
+						strView += JRrange;
+						strView +='</td><td>';
+						strView +=bLine[lNum];
+						strView +='</td><td>';
+						if(pos==">")
+							strView +="&#8593;";
+						else
+							strView +="&nbsp;";
+						strView +='</td><td>';
+						if(pos=="<")
+							strView +="&#8595;";
+						else
+							strView +="&nbsp;";
+						strView +='</td><td>';
+						if(pos=="=")
+							strView +="=";
+						else
+							strView +="&nbsp;";
+						strView +='</td></tr>';
+					}
+					/*strView +='<tr><td>';
+					strView+= date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+					strView +='</td><td>';
+					strView +=JR[str][1];
+					strView +='</td><td>';
+					strView +=JR[str][2];
+					strView +='</td><td>';
+					strView += (parseFloat(JR[str][1])/parseFloat(JR[str][2])).toFixed(5);
+					strView +='</td><td>';
+					strView +=JR[str][3];
+					strView +='</td></tr>';*/
+				}
+				if(summ.length > 0){
+					var min = parseFloat(summ[0][0]);
+					var max = 0.0;
+					for(var fs in summ){
+						var pf = parseFloat(summ[fs][0]);
+						if(min > pf)
+							min = pf;
+						if(max < pf)
+							max = pf;
+					}
+					var range = (max - min) /rangeCnt;
+					var ntab = '<table class="table">';
+					var subTitle = [];
+					var subRange = [];
+					var subVal = [];
+					for(var i = 0; i < rangeCnt; i++){
+						var selfMin = min + i*range;
+						var selfMax = min + (i+1)*range;
+						subTitle.push('<td colspan="3">'+selfMin.toFixed(3)+' - '+selfMax.toFixed(3)+'</td>');
+						subRange.push('<td><strong>&#8593;</strong></td><td><strong>&#8595;</strong></td><td><strong>=</strong></td>');
+						var sR = [0,0,0];
+						for(var sumNum in summ){
+							var pVal = parseFloat(summ[sumNum][0]);
+							if(pVal >= selfMin && pVal < selfMax ){
+								if(summ[sumNum][2]==">")
+									sR[0]++;
+								else if(summ[sumNum][2]=="<")
+									sR[1]++;
+								else
+									sR[2]++;
+							}
+						}
+						subVal.push('<td>'+sR[0]+'</td><td>'+sR[1]+'</td><td>'+sR[2]+'</td>');
+					}
+					ntab +='<tr>'+subTitle.join('')+'</tr>';
+					ntab +='<tr>'+subRange.join('')+'</tr>';
+					ntab +='<tr>'+subVal.join('')+'</tr>';
+					ntab +='</table>';
+					$("#sTable").html(ntab);
+				}
+				strView +='</table>';
+				$("#view").html(strView);
+			}
+		},"json");
+	}
+	/*var gr, plot, data = [], dLines = [];
+	var maxTime = (new Date()).getTime();
+	var minTime = maxTime - 86400000;
+	maxTime+=3600;
+	$(function(){
+		gr = $('#gr');
+		var height = $(window).height()-100;
+		gr.height(height);
+		$.get("/info",function(resp){
+			var dt = [];
+			var sMin = 0;
+			var sMax = 0;
+			var maxRadius = 0;
+			for(var tnum in resp.trades){
+				for( var tdate in resp.trades[tnum]){
+					for(var type in resp.trades[tnum][tdate]){
+						for (var uid in resp.trades[tnum][tdate][type]){
+							if(maxRadius < resp.trades[tnum][tdate][type][uid].amount)
+								maxRadius = resp.trades[tnum][tdate][type][uid].amount;
+							if(sMax < resp.trades[tnum][tdate][type][uid].price)
+								sMax = resp.trades[tnum][tdate][type][uid].price;
+							if(sMin > resp.trades[tnum][tdate][type][uid].price || sMin==0)
+								sMin = resp.trades[tnum][tdate][type][uid].price;
+			}}}}
+			sMin -=20;
+			if(sMin < 0)
+				sMin = 0;
+			var norm = 20/maxRadius;
+			console.log(norm,maxRadius);
+
+			for(var tnum in resp.trades){
+				for( var tdate in resp.trades[tnum]){
+					for(var type in resp.trades[tnum][tdate]){
+						for (var uid in resp.trades[tnum][tdate][type]){
+							var radius = parseInt(norm*resp.trades[tnum][tdate][type][uid].amount)+2;
+							var color = "#00ff00";
+							var sColor = "#009900";
+							var symbolName = "diamond";
+							if(resp.trades[tnum][tdate][type][uid].type=="bid"){
+								color = "#0000ff";
+								sColor = "#000099";
+								symbolName = "circle";
+							}
+							dLines.push({
+								data:[[parseInt(tdate)*1000,resp.trades[tnum][tdate][type][uid].price]],
+								lines: {show: false},
+								points: {
+									color: sColor,
+									show: true,
+									radius: radius,
+									fillColor: color,
+									symbol: symbolName
+								},
+								color: sColor
+							});
+						}
+					}
+				}
+			}
+
+
+		plot = $.plot(gr,dLines,{
+			series: {
+				lines: {
+					show: true,
+					steps: true
+				},
+				shadowSize: 0,
+				points: { show: true }
+			},
+			xaxis: {
+				mode: "time",
+				minTickSize: [1, "second"],
+				min: minTime,
+				max: maxTime+1000,
+				//twelveHourClock: true,
+				//zoomRange: [0.1, 10],
+				panRange: [minTime, maxTime+1000]
+			},
+			yaxis: {
+				min: sMin,
+				max: sMax+20,
+				//zoomRange: [0.1, 10],
+				panRange: [sMin, sMax+20]
+			},
+			zoom: {
+				interactive: true
+			},
+			pan: {
+				interactive: true
+			}});
+
+		},"json");
+	});*/
+	</script>
+  </body>
+</html>

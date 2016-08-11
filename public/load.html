@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>График</title>
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet" />
+    <link href="/js/jquery-ui.min.css" rel="stylesheet" />
+
+    <link rel="shortcut icon" href="/favicon.png">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+  <div class="container">
+  <div class="row">
+  	<div class="col-sm-6">
+  		<h1>Параметры поиска</h1>
+  		<form method="post" onsubmit="ws.workRange(); return false;">
+	  		<div class="form-group">
+		  		<div class="row">
+		  			<div class="col-sm-8">
+					    <label for="w-timeSlider">Временной диапазон поиска: </label>&nbsp;<span id="w-timeSliderResult"></span>
+			  			<div id="w-timeSlider"></div>
+		  			</div>
+		  			<div class="col-sm-4">
+					    <label for="w-time">Шаг поиска: </label>
+		  				<input type="number" class="form-control" id="w-time" required min="2" />
+		  			</div>
+		  		</div>
+	  		</div>
+
+	  		<div class="form-group">
+		  		<div class="row">
+		  			<div class="col-sm-8">
+					    <label for="w-rateSlider">Коэффициент: </label>&nbsp;<span id="w-rateSliderResultIn">1</span> - <span id="w-rateSliderResultOut">10</span>
+			  			<div id="w-rateSlider"></div>
+		  			</div>
+		  			<div class="col-sm-4">
+					    <label for="w-rate">Шаг: </label>
+		  				<input type="number" class="form-control" id="w-rate" required min="2"/>
+		  			</div>
+		  		</div>
+	  		</div>
+	  		<div class="form-group">
+		  		<div class="row">
+		  			<div class="col-sm-8">
+					    <label for="w-procSlider">Процент реакции: </label>&nbsp;<span id="w-procSliderResultIn">1</span> - <span id="w-procSliderResultOut">50</span>
+			  			<div id="w-procSlider"></div>
+		  			</div>
+		  			<div class="col-sm-4">
+					    <label for="w-proc">Шаг: </label>
+		  				<input type="number" class="form-control" id="w-proc" required min="2" />
+		  			</div>
+		  		</div>
+	  		</div>
+			<div class="row">
+				<div class="col-xs-6">
+					<button type="submit" class="btn btn-default">Запуск</button>
+				</div>
+				<div class="col-xs-6 text-right">
+					<button type="button" class="btn btn-danger" onclick="ws.closeRange();">Остановить</button>
+				</div>
+			</div>
+		</form>
+
+  	</div>
+  	<div class="col-sm-6">
+		  	<h1>Параметры продажи</h1>
+		  	<form class="form">
+		  <div class="form-group">
+		    <label for="pair">Пара: </label>
+		    <select id="pair" class="form-control">
+		    	<option value="btc_usd">btc_usd</option>
+		    </select>
+		  </div>
+		  <div class="form-group">
+		    <label for="findRange"> Диапазон поиска максимума сделки: </label>
+		    <input type="number" class="form-control" id="findRange" placeholder="В секундах">
+		  </div>
+		  <div class="form-group">
+		    <label for="rate"> Коэффициент: </label>
+		    <input type="number" class="form-control" id="rate" placeholder="d1">
+		  </div>
+		  <div class="form-group">
+		    <label for="rate"> Процент реакции: </label>
+		    <input type="number" class="form-control" id="proc" placeholder="">
+		  </div>
+		  <div class="row">
+		  	<div class="col-xs-6">
+			  <button type="button" class="btn btn-default" onclick="ws.work();">Получить</button>
+		  	</div>
+		  	<div class="col-xs-6 text-right">
+			  <button type="button" class="btn btn-danger" onclick="ws.close();">Остановить</button>
+		  	</div>
+		  </div>
+		</form>
+  	</div>
+  </div>
+
+<br />
+<div id="sTable"></div>
+<div class="row">
+	<div class="col-xs-7">
+		<div id="view"></div>
+	</div>
+	<div class="col-xs-5">
+		<div id="rtable"></div>
+	</div>
+</div>
+
+    <!--<h1>График за сутки</h1>
+  	<div class="row">
+  		<div class="col-xs-12" id="gr">
+  		</div>
+  	</div>
+  </div>-->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="/js/jquery-ui.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+	<!--<script language="javascript" type="text/javascript" src="/js/jquery.flot.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/jquery.flot.navigate.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/jquery.flot.time.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/jquery.flot.symbol.js"></script>-->
+	<script type="text/javascript">
+	var sliders = {};
+	$(function(){
+		sliders.time = $("#w-timeSlider").slider({
+			step: 3600,
+			max: 86400,
+			slide: function(event, ui){
+				$("#w-timeSliderResult").text(ui.value);
+				if( typeof window.localStorage != 'undefined')
+					window.localStorage.setItem("sliders.time",ui.value);
+			}
+		});
+		sliders.rate = $("#w-rateSlider").slider({
+			step: 1,
+			max: 50,
+			range: true,
+			values: [1,10],
+			slide: function(event, ui){
+				$("#w-rateSliderResultIn").text(ui.values[0]);
+				$("#w-rateSliderResultOut").text(ui.values[1]);
+				if( typeof window.localStorage != 'undefined'){
+					window.localStorage.setItem("sliders.rateIn",ui.values[0]);
+					window.localStorage.setItem("sliders.rateOut",ui.values[1]);
+				}
+			}
+		});
+		sliders.proc = $("#w-procSlider").slider({
+			step: 1,
+			max: 50,
+			range: true,
+			values: [1,50],
+			slide: function(event, ui){
+				$("#w-procSliderResultIn").text(ui.values[0]);
+				$("#w-procSliderResultOut").text(ui.values[1]);
+				if( typeof window.localStorage != 'undefined'){
+					window.localStorage.setItem("sliders.procIn",ui.values[0]);
+					window.localStorage.setItem("sliders.procOut",ui.values[1]);
+				}
+			}
+		});
+	});
+	var wsock = function(){
+		socket = {
+			sock: null,
+			range: null,
+			build: function(){
+				var self = this;
+				self.sock = new WebSocket("ws://trade.bhelp.com/ws");
+				self.sock.onopen = function(){console.log("ws connect");};
+				self.sock.onclose = function(){console.log("ws onclose"); self.sock = null; setTimeout(function(){self.build();},2000);};
+				self.sock.onmessage = self.onmessage;
+				return this;
+			},
+			buildRange: function(){
+				var self = this;
+				self.range = new WebSocket("ws://trade.bhelp.com/convert");
+				self.range.onopen = function(){console.log("convert connect");};
+				self.range.onclose = function(){console.log("convert onclose"); self.range = null; setTimeout(function(){self.buildRange();},2000);};
+				self.range.onmessage = self.onmessageRange;
+			},
+			reWork: function(){
+				var self = this;
+				setTimeout(function(){
+					if(self.sock != null)
+						self.work();
+					else
+						self.reWork();
+				},500);
+			},
+			onmessageRange: function(msg){
+				var self = this;
+				this.stop();
+				try {
+					var sj = JSON.parse(msg.data);
+					var findRange = $("#findRange").val(sj.time);
+					var viewRange = $("#findRange").val(sj.time);
+					var rate = $("#rate").val(sj.rate);
+					var proc = $("#proc").val(sj.proc);
+					self.reWork();
+				}
+				catch(err){
+					console.log(onmessageRange,msg);
+				}
+			},
+			onmessage: function(msg){
+				console.log("socket onmessage");
+				var sj = JSON.parse(msg.data);
+				var JR = sj.rate;
+				var lastPrice = 0;
+				var cnt = 0;
+				for(var str in JR){
+					var date = new Date(JR[str].dtime*1000);
+					var bLine = JR[str].price.split(',');
+					for(var lNum in bLine){
+						var strView = '';
+						var pos = "";
+						if(bLine[lNum]!=''){
+							var Price = parseFloat(bLine[lNum]);
+							if(Price > lastPrice)
+								pos = ">";
+							else if(Price < lastPrice)
+								pos = "<";
+							else
+								pos = "=";
+							lastPrice = Price;
+						}
+						strView +='<tr><td>';
+						strView+= date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+						strView +='</td><td>';
+						strView +=JR[str].asks;
+						strView +='</td><td>';
+						strView +=JR[str].bids;
+						strView +='</td><td>';
+						strView += JR[str].range;
+						strView +='</td><td>';
+						strView +=bLine[lNum];
+						strView +='</td><td>';
+						if(pos==">")
+							strView +="&#8593;";
+						else
+							strView +="&nbsp;";
+						strView +='</td><td>';
+						if(pos=="<")
+							strView +="&#8595;";
+						else
+							strView +="&nbsp;";
+						strView +='</td><td>';
+						if(pos=="=")
+							strView +="=";
+						else
+							strView +="&nbsp;";
+						strView +='</td></tr>';
+						$("#view table").html(strView);
+						cnt++;
+					}
+				}
+
+				//tab
+				
+				var stable = "";
+				var stableData = "";
+				var stableP = "";
+				var sub = 0;
+				for(var str in sj.tab){
+					if(sub==0)
+						stable += "<td colspan='3'>"+sj.tab[str].min.toFixed(3)+" - "+sj.tab[str].max.toFixed(3)+"</td>";
+					sub++;
+					if(sub >= 3)
+						sub = 0;
+						stableP += "<td>"+sj.tab[str].pos+"</td>";
+						//stableData += "<td>"+sj.tab[str].count+"</td>";
+					if(typeof sj.last.range!='undefined' && sj.last.range >= sj.tab[str].min && sj.last.range <= sj.tab[str].max){
+						var has = true;
+						if(typeof sj.last.asc!='undefined'){
+							if(sj.last.asc.min >= sj.tab[str].min && sj.last.asc.max <= sj.tab[str].max && sj.last.asc.pos==sj.tab[str].pos){
+								stableData += "<td style='background:#005500; color: #fff;'>"+sj.tab[str].count+"</td>";
+								has = false;
+							}
+						}
+						if(has){
+								stableData += "<td style='background:#333; color: #fff;'>"+sj.tab[str].count+"</td>";
+						}
+
+					}
+					else{
+						var has = true;
+						if(typeof sj.last.asc!='undefined'){
+							if(sj.last.asc.min >= sj.tab[str].min && sj.last.asc.max <= sj.tab[str].max && sj.last.asc.pos==sj.tab[str].pos){
+								stableData += "<td style='background:#005500; color: #fff;'>"+sj.tab[str].count+"</td>";
+								has = false;
+							}
+						}
+						if(has){
+								stableData += "<td>"+sj.tab[str].count+"</td>";
+						}
+					}
+
+				}
+				$("#sTable").html('<table class="table"><tr>'+stable+'</tr><tr>'+stableP+'</tr><tr>'+stableData+'</tr></table>');
+
+				if(typeof sj.rtables!='undefined'){
+					var resultG = 0;
+					var resultR = 0;
+					var cnt = 0;
+					$("#rtable").html('<table class="table"></table>');
+					/*for(var str in sj.rtables){
+						cnt++;
+					}*/
+					for(var str in sj.rtables){
+						var resp = "";
+						var date = new Date(sj.rtables[str].dtime*1000);
+						if(sj.rtables[str].response==1){
+							resultG++;
+							resp +='<tr style="background: #005500; color: #ffffff;"><td>';
+						}
+						else{
+							resultR++;
+							resp +='<tr style="background: #550000; color: #ffffff;"><td>';
+						}
+						resp+= date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+						resp +='</td><td>';
+						resp +=sj.rtables[str].price;
+						resp +='</td><td>';
+						resp +=sj.rtables[str].range;
+						resp +='</td></tr>';
+						//if(cnt < 10)
+						$("#rtable table").prepend(resp);
+						//cnt--;
+					}
+					resp = '<tr><td style="background: #005500; color: #ffffff;">'+resultG+'</td><td style="background: #550000; color: #ffffff;">'+resultR+'</td></tr>';
+					$("#rtable table").prepend(resp);
+				}
+
+			},
+			close: function(){
+				this.sock.close();
+			},
+			closeRange: function(){
+				this.range.close();
+			},
+			workRange: function(){
+				var list = '';
+				if(typeof window.localStorage != 'undefined'){
+					window.localStorage.setItem("input.time",$("#w-time").val());
+					window.localStorage.setItem("input.rate",$("#w-rate").val());
+					window.localStorage.setItem("input.proc",$("#w-proc").val());
+				}
+				list += $('#pair').val() + ';';
+				list += ( parseInt($('#w-timeSliderResult').text()) || 0 ).toString() + ';';
+				list += ( parseInt($('#w-time').val()) || 0 ).toString() + ';';
+				list += ( parseInt($('#w-rateSliderResultIn').text()) || 0 ).toString() + ';';
+				list += ( parseInt($('#w-rateSliderResultOut').text()) || 0 ).toString() + ';';
+				list += ( parseInt($('#w-rate').val()) || 0 ).toString() + ';';
+				list += ( parseInt($('#w-procSliderResultIn').text()) || 0 ).toString() + ';';
+				list += ( parseInt($('#w-procSliderResultOut').text()) || 0 ).toString() + ';';
+				list += ( parseInt($('#w-proc').val()) || 0 ).toString();
+				if(this.range != null)
+					this.range.send(list);
+			},
+			work: function(){
+				var pair = $("#pair").val();
+				var findRange = $("#findRange").val();
+				var viewRange = $("#findRange").val();
+				var rate = $("#rate").val();
+				var proc = $("#proc").val();
+				$("#view").html('<table class="table"></table>');
+				if(this.sock != null)
+					this.sock.send(pair+";"+findRange+";"+ viewRange +";"+ rate+";"+proc);
+			},
+			initRange: function(){
+				var stor = window.localStorage;
+				if(typeof stor != 'undefined'){
+					var st = stor.getItem("sliders.time");
+					if(st!=null){
+						sliders.time.slider("value",st);
+						$("#w-timeSliderResult").text(st);
+					}
+
+					st = stor.getItem("sliders.rateIn");
+					if(st!=null){
+						var stOut = stor.getItem("sliders.rateOut");
+						$("#w-rateSliderResultIn").text(st);
+						$("#w-rateSliderResultOut").text(stOut);
+						sliders.rate.slider("values",[st,stOut]);
+					}
+
+					st = stor.getItem("sliders.procIn");
+					if(st!=null){
+						var stOut = stor.getItem("sliders.procOut");
+						sliders.proc.slider("values",[st,stOut]);
+						$("#w-procSliderResultIn").text(st);
+						$("#w-procSliderResultOut").text(stOut);
+					}
+					$("#w-time").val(stor.getItem("input.time"));
+					$("#w-rate").val(stor.getItem("input.rate"));
+					$("#w-proc").val(stor.getItem("input.proc"));
+				}
+			}
+		};
+		socket.initRange();
+		socket.buildRange();
+		return socket.build();
+	};
+
+	var ws;
+	$(function(){
+		ws = new wsock;
+	});
+
+
+	</script>
+  </body>
+</html>
