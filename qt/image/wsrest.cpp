@@ -51,9 +51,11 @@ void WSrest::socketDisconnected(){
             lastAsc.remove(lst);
             rangeUser.remove(lst);
             tmpUser.remove(lst);
+            std::cout << "end: " << lst << " ";
         }
         try {
             pClient->deleteLater();
+            std::cout << "no error" << std::endl;
         }
         catch (...){
             std::cout << "error!" << std::endl;

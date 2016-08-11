@@ -20,10 +20,15 @@ public slots:
     void run();
 
 private:
-    iTask *step;
-    iTaskResult *result;
-    iTradesData *trade;
-    QHash<uint,iDepth> *depth;
+    iTask               *step;
+    iRate               rate;
+    iTaskResult         *result;
+    iTradesData         *trade;
+    QHash<uint,iDepth>  *depth;
+    QHash <int, strTable> lastAsc;
+    QVector <tmpTable>  rateUser;
+    QVector< strResponse > rangeUser;
+    QMap<uint, infoBlock>  tmpUser;
 
     void getMax();
     ufBlock getStep();
