@@ -277,7 +277,7 @@ void Depth::loadOb(){
     QString data = current.toString("yyyy-MM-dd HH:00:00");
     QDateTime currentHour = QDateTime::fromString(data,"yyyy-MM-dd HH:00:00");
     uint tSafe = currentHour.toTime_t();
-    for( int i = 23; i > 0; --i){
+    for( int i = 23; i >= 0; --i){
         QHash <uint, iDepth> depSafe;
         uint lastFile = tSafe - 3600*i;
         QString filename = dirPath+"/depth"+QString::number(lastFile)+".ob";
