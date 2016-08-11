@@ -278,22 +278,24 @@ void Depth::loadOb(){
     QDateTime currentHour = QDateTime::fromString(data,"yyyy-MM-dd HH:00:00");
     uint tSafe = currentHour.toTime_t();
     for( int i = 23; i > 0; --i){
-        //QHash <uint, iDepth> depSafe;
+        QHash <uint, iDepth> depSafe;
         uint lastFile = tSafe - 3600*i;
         QString filename = dirPath+"/depth"+QString::number(lastFile)+".ob";
         QFile depthFile(filename);
         if(depthFile.exists()){
+            std::cout << filename.toStdString() << std::endl;
             if (depthFile.open(QIODevice::ReadOnly)){
                 QDataStream in(&depthFile);
                 in.setVersion(QDataStream::Qt_5_3);
-                in >> dep;
+                in >> depSafe;
             }
         }
-        for(auto dI=dep.begin(); dI!=dep.end();++dI){
+        for(auto dI=depSafe.begin(); dI!=depSafe.end();++dI){
+            dep.insert(dI.key(),dI.value());
             Memory::set(dI.key(),dI.value());
-            std::cout << "dep.add:" <<  dI.key() << std::endl;
+            std::cout << "Memory::set " << dI.key() << std::endl;
         }
-//        depSafe.clear();
+        depSafe.clear();
     }
 
     /*QString filename = "depth.ob";
