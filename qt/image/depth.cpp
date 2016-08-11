@@ -282,6 +282,7 @@ void Depth::loadOb(){
         uint lastFile = tSafe - 3600*i;
         QString filename = dirPath+"/depth"+QString::number(lastFile)+".ob";
         QFile depthFile(filename);
+        std::cout << filename.toStdString() << std::endl;
         if(depthFile.exists()){
             std::cout << filename.toStdString() << std::endl;
             if (depthFile.open(QIODevice::ReadOnly)){
