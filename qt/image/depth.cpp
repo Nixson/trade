@@ -291,6 +291,7 @@ void Depth::loadOb(){
         }
         for(auto dI=dep.begin(); dI!=dep.end();++dI){
             Memory::set(dI.key(),dI.value());
+            std::cout << "dep.add:" <<  dI.key() << std::endl;
         }
 //        depSafe.clear();
     }
