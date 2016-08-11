@@ -282,9 +282,7 @@ void Depth::loadOb(){
         uint lastFile = tSafe - 3600*i;
         QString filename = dirPath+"/depth"+QString::number(lastFile)+".ob";
         QFile depthFile(filename);
-        std::cout << filename.toStdString() << std::endl;
         if(depthFile.exists()){
-            std::cout << filename.toStdString() << std::endl;
             if (depthFile.open(QIODevice::ReadOnly)){
                 QDataStream in(&depthFile);
                 in.setVersion(QDataStream::Qt_5_3);
@@ -294,7 +292,6 @@ void Depth::loadOb(){
         for(auto dI=depSafe.begin(); dI!=depSafe.end();++dI){
             dep.insert(dI.key(),dI.value());
             Memory::set(dI.key(),dI.value());
-            std::cout << "Memory::set " << dI.key() << std::endl;
         }
         depSafe.clear();
     }
