@@ -36,7 +36,6 @@ void WsWorker::onNewConnection(){
     client.priceRange = 2;
     client.tasks = 0;
     user.insert(last,client);
-    std::cout << "WsWorker onNewConnection " << last << std::endl;
     ++last;
 }
 void WsWorker::socketDisconnected(){
@@ -50,7 +49,6 @@ void WsWorker::socketDisconnected(){
         }
         try {
             pClient->deleteLater();
-            std::cout << "no error" << std::endl;
         }
         catch (...){
             std::cout << "error!" << std::endl;
@@ -58,7 +56,6 @@ void WsWorker::socketDisconnected(){
     }
 }
 void WsWorker::processTextMessage(QString message){
-    std::cout << "WsWorker processTextMessage " << message.toStdString() << std::endl;
     QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
     if (pClient) {
         if(!m_clients.contains(pClient)){
