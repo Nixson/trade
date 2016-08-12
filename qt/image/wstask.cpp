@@ -13,20 +13,113 @@ void WsTask::run(){
     Memory::get(step->PeriodStart,step->PeriodStop,*trade);
     Memory::get(step->PeriodStart,step->PeriodStop,*depth);
 
-    rate.lastPeriod = 0;
+    //Собираем последние 20 минут
+    uint last20 = step->PeriodStop - 60*20;
+    for(uint pos = last20; pos <= step->PeriodStop; ++pos){
+        if(trade->contains(pos)){
+            findTrade->insert(pos,trade->value(pos));
+            trade->remove(pos);
+        }
+        if(depth->contains(pos)){
+            findDepth->insert(pos,depth->value(pos));
+            depth->remove(pos);
+        }
+    }
 
+
+
+    rate.lastPeriod = 0;
     getMax();
+
+    //step->rate
     ufBlock list = getStep();
     getRange(list);
-
     updTmpTable(list);
-
     reRange();
 
+    for(uint pos = last20; pos <= step->PeriodStop; ++pos){
+        trade->clear();
+        depth->clear();
+        if(findDepth->contains(pos))
+            depth->insert(pos,findDepth->value(pos));
+        if(findTrade->contains(pos))
+            trade->insert(pos,findTrade->value(pos));
+        ufBlock list = getLastDep();
+        getRange(list);
+        updTmpTable(list);
+        reRange();
+    }
 
-    std::cout << "WsTask" <<  list.size() << std::endl;
+    std::cout << "WsTask" <<  rangeUser.size() << std::endl;
 
     emit response(step, result);
+}
+
+ufBlock& WsTask::getLastDep(){
+    ufBlock nextStep;
+    for(auto iter = depth->begin();iter!=depth->end();  ++iter){
+        if(!iter.value().contains(step->type))
+            continue;
+        iPairs ascPair = iter.value()[step->type]["asks"];
+        qSort(ascPair.begin(),ascPair.end(),Asort);
+        iPairs bidPair = iter.value()[step->type]["bids"];
+        qSort(bidPair.begin(),bidPair.end(),Dsort);
+        int cntA = 0;
+        int cntB = 0;
+        float summ = 0.0;
+        foreach (iPair pr, ascPair){
+            ++cntA;
+            summ += pr.amount;
+            if(summ >=step->rate)
+                break;
+        }
+        summ = 0.0;
+        foreach (iPair pr, bidPair){
+            ++cntB;
+            summ += pr.amount;
+            if(summ >=step->rate)
+                break;
+        }
+        infoBlock bl;
+        bl.dtime = iter.key();
+        bl.asks = (uint)cntA;
+        bl.bids = (uint)cntB;
+        if(cntB > 0)
+            bl.range = (float)cntA/(float)cntB;
+        else
+            bl.range = 0.0;
+        nextStep.insert(bl.dtime,bl);
+    }
+    return getLastTrades(nextStep);
+}
+
+ufBlock& WsTask::getLastTrades(ufBlock &listDepth){
+    for(auto iter = trade->cbegin();iter!=trade->cend();  ++iter){
+        uint period = iter.key();
+        if(!iter.value().contains(step->type))
+            continue;
+        if(!listDepth.contains(period)){
+            bool find = false;
+            infoBlock bdata;
+            bdata.dtime = period;
+            for(uint subperiod = period; subperiod > period-10; --subperiod){
+                if(listDepth.contains(subperiod)){
+                    find = true;
+                    bdata.asks = listDepth[subperiod].asks;
+                    bdata.bids = listDepth[subperiod].bids;
+                    bdata.range = listDepth[subperiod].range;
+                }
+            }
+            if(!find)
+                continue;
+            listDepth.insert(period,bdata);
+        }
+        iTrades td = iter.value()[step->type];
+        foreach (iTrade tradeElement, td) {
+            listDepth[period].price.append(tradeElement.price);
+        }
+    }
+    return listDepth;
 }
 
 void WsTask::getMax(){
@@ -232,7 +325,7 @@ void WsTask::subRange(){
         subRange();
     }
 }
-QVector <strTable> WsTask::reRange(){
+void WsTask::reRange(){
     QVector <strTable> sdata;
     float ranges = 0.1;
     int rangesCnt = (int)((rate.max-rate.min)/ranges);
@@ -319,5 +412,5 @@ QVector <strTable> WsTask::reRange(){
     if(rrange){
         lastAsc.remove(0);
     }
-    return sdata;
+    //return sdata;
 }

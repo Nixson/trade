@@ -24,8 +24,11 @@ private:
     iTask               *step;
     iRate               rate;
     iTaskResult         *result;
-    iTradesData         *trade;
-    QHash<uint,iDepth>  *depth;
+    iTradesData         *trade, *findTrade;
+    QHash<uint,iDepth>  *depth, *findDepth;
+
+
+
     QHash <int, strTable> lastAsc;
     QVector<tmpTable>  rateUser;
     QVector< strResponse > rangeUser;
@@ -35,7 +38,10 @@ private:
     void getRange(ufBlock &listDepth);
     void updTmpTable(ufBlock &rest);
     void subRange();
-    QVector <strTable> reRange();
+    void reRange();
+
+    ufBlock& getLastDep();
+    ufBlock& getLastTrades(ufBlock &listDepth);
 };
 
 #endif // WSTASK_H
