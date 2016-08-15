@@ -43,10 +43,6 @@ void WsTask::run(){
     std::cout << "WsTask next: " << findTrade.size() << ":" << findDepth.size() << std::endl;
 
     for(uint pos = last20; pos <= step->PeriodStop; ++pos){
-        std::cout << "WsTask clear: " << pos << std::endl;
-        trade.clear();
-        depth.clear();
-
         std::cout << "WsTask insert: " << pos << std::endl;
         if(findDepth.contains(pos))
             depth[pos] = findDepth[pos];
@@ -60,7 +56,7 @@ void WsTask::run(){
             std::cout << "WsTask depth: " << info.key() << std::endl;
         }
 
-        ufBlock list = getLastDep();
+        ufBlock list = getLastDep(pos);
         for(auto info = list.begin(); info != list.end(); ++info){
             std::cout << "WsTask getLastDep: " << info.key() << std::endl;
         }
@@ -79,9 +75,11 @@ void WsTask::run(){
     emit response(step, result);
 }
 
-ufBlock& WsTask::getLastDep(){
-    ufBlock nextStep;
+umBlock& WsTask::getLastDep(uint pos){
+    umBlock nextStep;
     for(auto iter = depth.cbegin();iter!=depth.cend();  ++iter){
+        if(iter.key() < pos)
+            continue;
         if(!iter.value().contains(step->type))
             continue;
         iPairs ascPair = iter.value()[step->type]["asks"];
@@ -118,7 +116,7 @@ ufBlock& WsTask::getLastDep(){
     return getLastTrades(nextStep);
 }
 
-ufBlock& WsTask::getLastTrades(ufBlock &listDepth){
+umBlock &WsTask::getLastTrades(umBlock &listDepth){
     for(auto iter = trade.cbegin();iter!=trade.cend();  ++iter){
         uint period = iter.key();
         if(!iter.value().contains(step->type))
