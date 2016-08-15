@@ -28,6 +28,7 @@ void WsTask::run(){
 
 
 
+
     rate.lastPeriod = 0;
     getMax();
 
@@ -36,6 +37,7 @@ void WsTask::run(){
     getRange(list);
     updTmpTable(list);
     reRange();
+    std::cout << "reRange" << std::endl;
 
     for(uint pos = last20; pos <= step->PeriodStop; ++pos){
         trade->clear();
