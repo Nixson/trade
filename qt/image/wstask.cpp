@@ -231,6 +231,8 @@ void WsTask::updTmpTable(ufBlock &rest){
     QDateTime current = QDateTime::currentDateTime();
     uint cTime = current.toTime_t();
 
+    std::cout << "updTmpTable rest:" << rest.size() << std::endl;
+
     for (auto i = rest.begin(); i != rest.end(); ++i){
         infoBlock info = i.value();
         if(info.dtime > rate.lastPeriod){
@@ -243,7 +245,7 @@ void WsTask::updTmpTable(ufBlock &rest){
     rate.min = 0.0;
     rate.max = 0.0;
     rateUser.clear();
-    std::cout << "updTmpTable:" << rateUser.size() << std::endl;
+    std::cout << "updTmpTable:" << tmpUser.size() << std::endl;
     for (auto i = tmpUser.begin(); i != tmpUser.end(); ++i){
         bool isLast = false;
         infoBlock info = i.value();

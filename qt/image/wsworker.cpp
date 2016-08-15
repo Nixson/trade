@@ -112,6 +112,7 @@ void WsWorker::processTextMessage(QString message){
                 }
                 break;
             }
+            break;
         }
         std::cout << "QThreadPool start: " << user[idusersocs].tasks << std::endl;
     }
