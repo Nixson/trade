@@ -16,7 +16,6 @@ void WsTask::run(){
     Memory::get(step->PeriodStart,step->PeriodStop,*depth);
 
     //Собираем последние 20 минут
-    std::cout << "reRange step 0" << std::endl;
     uint last20 = step->PeriodStop - 60*20;
     for(uint pos = last20; pos <= step->PeriodStop; ++pos){
         if(trade->contains(pos)){
@@ -36,12 +35,10 @@ void WsTask::run(){
     getMax();
 
     //step->rate
-    std::cout << "reRange step 1" << std::endl;
     ufBlock list = getStep();
     getRange(list);
     updTmpTable(list);
     reRange();
-    std::cout << "reRange step 2" << std::endl;
 
     for(uint pos = last20; pos <= step->PeriodStop; ++pos){
         trade->clear();
@@ -53,9 +50,7 @@ void WsTask::run(){
             addrDepth[pos] = findDepth->value(pos);
         if(findTrade->contains(pos))
             addrTrade[pos] = findTrade->value(pos);
-        std::cout << "reRange step 3: " << pos << std::endl;
         ufBlock list = getLastDep();
-        std::cout << "reRange step 4" << std::endl;
         getRange(list);
         updTmpTable(list);
         reRange();
@@ -99,17 +94,14 @@ ufBlock& WsTask::getLastDep(){
             bl.range = (float)cntA/(float)cntB;
         else
             bl.range = 0.0;
-        std::cout << "reRange getLastDep: " << bl.dtime << std::endl;
         nextStep[bl.dtime] = bl;
     }
-    std::cout << "reRange nextStep: " << nextStep.size() << std::endl;
     return getLastTrades(nextStep);
 }
 
 ufBlock& WsTask::getLastTrades(ufBlock &listDepth){
     for(auto iter = trade->cbegin();iter!=trade->cend();  ++iter){
         uint period = iter.key();
-        std::cout << "reRange getLastTrades: " << period << std::endl;
         if(!iter.value().contains(step->type))
             continue;
         if(!listDepth.contains(period)){
@@ -133,7 +125,6 @@ ufBlock& WsTask::getLastTrades(ufBlock &listDepth){
             listDepth[period].price.append(tradeElement.price);
         }
     }
-    std::cout << "reRange getLastTrades: " << listDepth.size() << std::endl;
     return listDepth;
 }
 
