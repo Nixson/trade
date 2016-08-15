@@ -53,6 +53,13 @@ void WsTask::run(){
         if(findTrade.contains(pos))
             trade[pos] = findTrade[pos];
         std::cout << "WsTask next: " << trade.size() << ":" << depth.size() << std::endl;
+        for(auto info = trade.begin(); info != trade.end(); ++info){
+            std::cout << "WsTask trade: " << info.key() << std::endl;
+        }
+        for(auto info = depth.begin(); info != depth.end(); ++info){
+            std::cout << "WsTask depth: " << info.key() << std::endl;
+        }
+
         ufBlock list = getLastDep();
         for(auto info = list.begin(); info != list.end(); ++info){
             std::cout << "WsTask getLastDep: " << info.key() << std::endl;
