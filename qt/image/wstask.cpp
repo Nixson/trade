@@ -54,7 +54,7 @@ void WsTask::run(){
         ufBlock list = getLastDep();
         std::cout << "reRange step 4" << std::endl;
         getRange(list);
-        std::cout << "reRange step 5" << std::endl;
+        std::cout << "reRange step 5: " << list.size() << std::endl;
         updTmpTable(list);
         std::cout << "reRange step 6" << std::endl;
         reRange();
@@ -243,6 +243,7 @@ void WsTask::updTmpTable(ufBlock &rest){
     rate.min = 0.0;
     rate.max = 0.0;
     rateUser.clear();
+    std::cout << "updTmpTable:" << rateUser.size() << std::endl;
     for (auto i = tmpUser.begin(); i != tmpUser.end(); ++i){
         bool isLast = false;
         infoBlock info = i.value();
@@ -268,7 +269,6 @@ void WsTask::updTmpTable(ufBlock &rest){
             if(isLast && (pos=='>' || pos=='<')){
                 if(lastAsc.contains(0)){
                     if(info.range >= lastAsc[0].min && info.range <= lastAsc[0].max){
-
                         strResponse rsp;
                         rsp.dtime = cTime;
                         rsp.price = price;
@@ -305,6 +305,7 @@ void WsTask::updTmpTable(ufBlock &rest){
 
         }
     }
+    std::cout << "subRange: " << rateUser.length() << std::endl;
     subRange();
 }
 void WsTask::subRange(){
