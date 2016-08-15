@@ -98,6 +98,7 @@ ufBlock& WsTask::getLastDep(){
             bl.range = 0.0;
         nextStep.insert(bl.dtime,bl);
     }
+    std::cout << "reRange nextStep: " << nextStep.size() << std::endl;
     return getLastTrades(nextStep);
 }
 
@@ -127,6 +128,7 @@ ufBlock& WsTask::getLastTrades(ufBlock &listDepth){
             listDepth[period].price.append(tradeElement.price);
         }
     }
+    std::cout << "reRange getLastTrades: " << listDepth.size() << std::endl;
     return listDepth;
 }
 
