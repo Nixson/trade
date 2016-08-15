@@ -193,6 +193,7 @@ ufBlock WsTask::getStep(){
 void WsTask::getRange(ufBlock &listDepth){
     for(auto iter = trade->cbegin();iter!=trade->cend();  ++iter){
         uint period = iter.key();
+        std::cout << "getRange: " << period << std::endl;
         if(!iter.value().contains(step->type))
             continue;
         if(!listDepth.contains(period)){
@@ -233,7 +234,7 @@ void WsTask::updTmpTable(ufBlock &rest){
 
     std::cout << "updTmpTable rest:" << rest.size() << std::endl;
 
-    for (auto i = rest.begin(); i != rest.end(); ++i){
+    for (auto i = rest.cbegin(); i != rest.cend(); ++i){
         infoBlock info = i.value();
         std::cout << "updTmpTable rest begin:" << i.key() << std::endl;
         if(info.dtime > rate.lastPeriod){
