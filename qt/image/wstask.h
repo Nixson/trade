@@ -24,8 +24,11 @@ private:
     iTask               *step;
     iRate               rate;
     iTaskResult         *result;
-    iTradesData         *trade, *findTrade;
-    QHash<uint,iDepth>  *depth, *findDepth;
+    iTradesData         *tradeLink, findTrade;
+    QHash<uint,iDepth>  *depthLink, findDepth;
+
+    iTradesData         trade;
+    QHash<uint,iDepth>  depth;
 
 
 

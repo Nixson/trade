@@ -6,25 +6,25 @@
 WsTask::WsTask(iTask *stepTask, QObject *parent) : QObject(parent),
                                                    step(stepTask),
                                                    result(new iTaskResult),
-                                                   trade(new iTradesData),
-                                                   findTrade(new iTradesData),
-                                                   depth(new QHash<uint,iDepth>),
-                                                   findDepth(new QHash<uint,iDepth>){}
+                                                   tradeLink(new iTradesData),
+                                                   depthLink(new QHash<uint,iDepth>){}
 
 void WsTask::run(){
-    Memory::get(step->PeriodStart,step->PeriodStop,*trade);
-    Memory::get(step->PeriodStart,step->PeriodStop,*depth);
+    Memory::get(step->PeriodStart,step->PeriodStop,*tradeLink);
+    Memory::get(step->PeriodStart,step->PeriodStop,*depthLink);
 
     //Собираем последние 20 минут
+    trade = *tradeLink;
+    depth = *depthLink;
     uint last20 = step->PeriodStop - 60*20;
     for(uint pos = last20; pos <= step->PeriodStop; ++pos){
-        if(trade->contains(pos)){
-            findTrade->insert(pos,trade->value(pos));
-            trade->remove(pos);
+        if(trade.contains(pos)){
+            findTrade[pos] = trade[pos];
+            trade.remove(pos);
         }
-        if(depth->contains(pos)){
-            findDepth->insert(pos,depth->value(pos));
-            depth->remove(pos);
+        if(depth.contains(pos)){
+            findDepth[pos] = depth[pos];
+            depth.remove(pos);
         }
     }
 
@@ -41,15 +41,13 @@ void WsTask::run(){
     reRange();
 
     for(uint pos = last20; pos <= step->PeriodStop; ++pos){
-        trade->clear();
-        depth->clear();
-        iTradesData addrTrade = *trade;
-        QHash<uint,iDepth> addrDepth = *depth;
+        trade.clear();
+        depth.clear();
 
-        if(findDepth->contains(pos))
-            addrDepth[pos] = findDepth->value(pos);
-        if(findTrade->contains(pos))
-            addrTrade[pos] = findTrade->value(pos);
+        if(findDepth.contains(pos))
+            depth[pos] = findDepth[pos];
+        if(findTrade.contains(pos))
+            trade[pos] = findTrade[pos];
         ufBlock list = getLastDep();
         getRange(list);
         updTmpTable(list);
@@ -63,7 +61,7 @@ void WsTask::run(){
 
 ufBlock& WsTask::getLastDep(){
     ufBlock nextStep;
-    for(auto iter = depth->begin();iter!=depth->end();  ++iter){
+    for(auto iter = depth.cbegin();iter!=depth.cend();  ++iter){
         if(!iter.value().contains(step->type))
             continue;
         iPairs ascPair = iter.value()[step->type]["asks"];
@@ -100,7 +98,7 @@ ufBlock& WsTask::getLastDep(){
 }
 
 ufBlock& WsTask::getLastTrades(ufBlock &listDepth){
-    for(auto iter = trade->cbegin();iter!=trade->cend();  ++iter){
+    for(auto iter = trade.cbegin();iter!=trade.cend();  ++iter){
         uint period = iter.key();
         if(!iter.value().contains(step->type))
             continue;
@@ -118,7 +116,7 @@ ufBlock& WsTask::getLastTrades(ufBlock &listDepth){
             }
             if(!find)
                 continue;
-            listDepth.insert(period,bdata);
+            listDepth[period] = bdata;
         }
         iTrades td = iter.value()[step->type];
         foreach (iTrade tradeElement, td) {
@@ -130,7 +128,7 @@ ufBlock& WsTask::getLastTrades(ufBlock &listDepth){
 
 void WsTask::getMax(){
     float max = 0.0;
-    for(auto iter = trade->begin();iter!=trade->end();  ++iter){
+    for(auto iter = trade.cbegin();iter!=trade.cend();  ++iter){
         if(!iter.value().contains(step->type))
             continue;
         iTrades td = iter.value()[step->type];
@@ -149,7 +147,7 @@ bool WsTask::Dsort(iPair a, iPair b){
 }
 ufBlock WsTask::getStep(){
     ufBlock nextStep;
-    for(auto iter = depth->cbegin();iter!=depth->cend();  ++iter){
+    for(auto iter = depth.cbegin();iter!=depth.cend();  ++iter){
         if(!iter.value().contains(step->type))
             continue;
         iPairs ascPair = iter.value()[step->type]["asks"];
@@ -185,7 +183,7 @@ ufBlock WsTask::getStep(){
     return nextStep;
 }
 void WsTask::getRange(ufBlock &listDepth){
-    for(auto iter = trade->cbegin();iter!=trade->cend();  ++iter){
+    for(auto iter = trade.cbegin();iter!=trade.cend();  ++iter){
         uint period = iter.key();
         if(!iter.value().contains(step->type))
             continue;
@@ -206,7 +204,7 @@ void WsTask::getRange(ufBlock &listDepth){
             }
             if(!find)
                 continue;
-            listDepth.insert(period,bdata);
+            listDepth[period] =bdata;
         }
         iTrades td = iter.value()[step->type];
         foreach (iTrade tradeElement, td) {
@@ -225,23 +223,19 @@ void WsTask::updTmpTable(ufBlock &rest){
     QDateTime current = QDateTime::currentDateTime();
     uint cTime = current.toTime_t();
 
-    std::cout << "updTmpTable rest:" << rest.size() << std::endl;
 
     for (auto i = rest.cbegin(); i != rest.cend(); ++i){
         infoBlock info = i.value();
-        std::cout << "updTmpTable rest begin:" << i.key() << std::endl;
         if(info.dtime > rate.lastPeriod){
             rate.lastRange = info.range;
         }
         if(info.price.size() == 0)
             continue;
-        std::cout << "updTmpTable rest tmpUser:" << i.key() << std::endl;
         tmpUser[i.key()] = info;
     }
     rate.min = 0.0;
     rate.max = 0.0;
     rateUser.clear();
-    std::cout << "updTmpTable:" << tmpUser.size() << std::endl;
     for (auto i = tmpUser.begin(); i != tmpUser.end(); ++i){
         bool isLast = false;
         infoBlock info = i.value();
@@ -303,7 +297,6 @@ void WsTask::updTmpTable(ufBlock &rest){
 
         }
     }
-    std::cout << "subRange: " << rateUser.length() << std::endl;
     subRange();
 }
 void WsTask::subRange(){
