@@ -50,9 +50,13 @@ void WsTask::run(){
             depth[pos] = findDepth[pos];
         if(findTrade.contains(pos))
             trade[pos] = findTrade[pos];
+        std::cout << "WsTask next: " << trade.size() << ":" << depth.size() << std::endl;
         ufBlock list = getLastDep();
+        std::cout << "WsTask getLastDep: " << list.size() << std::endl;
         getRange(list);
+        std::cout << "WsTask getRange: " << list.size() << std::endl;
         updTmpTable(list);
+        std::cout << "WsTask updTmpTable: " << list.size() << std::endl;
         reRange();
     }
 
