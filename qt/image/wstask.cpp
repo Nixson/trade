@@ -112,6 +112,7 @@ ufBlock& WsTask::getLastDep(){
             bl.range = (float)cntA/(float)cntB;
         else
             bl.range = 0.0;
+        std::cout << "WsTask getLastDep: " << bl.dtime << std::endl;
         nextStep[bl.dtime] = bl;
     }
     return getLastTrades(nextStep);
