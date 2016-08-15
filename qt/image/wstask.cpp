@@ -16,7 +16,6 @@ void WsTask::run(){
     //Собираем последние 20 минут
     trade = *tradeLink;
     depth = *depthLink;
-    std::cout << "WsTask start: " << trade.size() << ":" << depth.size() << std::endl;
     uint last20 = step->PeriodStop - 60*20;
     for(uint pos = last20; pos <= step->PeriodStop; ++pos){
         if(trade.contains(pos)){
@@ -28,6 +27,7 @@ void WsTask::run(){
             depth.remove(pos);
         }
     }
+    std::cout << "WsTask start: " << trade.size() << ":" << depth.size() << std::endl;
 
 
 
@@ -40,6 +40,7 @@ void WsTask::run(){
     getRange(list);
     updTmpTable(list);
     reRange();
+    std::cout << "WsTask next: " << findTrade.size() << ":" << findDepth.size() << std::endl;
 
     for(uint pos = last20; pos <= step->PeriodStop; ++pos){
         trade.clear();
