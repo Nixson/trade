@@ -43,14 +43,16 @@ void WsTask::run(){
     reRange();
     std::cout << "reRange step 2" << std::endl;
 
+    iTradesData addrTrade = *trade;
+    QHash<uint,iDepth> addrDepth = *depth;
     for(uint pos = last20; pos <= step->PeriodStop; ++pos){
         trade->clear();
         depth->clear();
 
         if(findDepth->contains(pos))
-            depth->insert(pos,findDepth->value(pos));
+            addrDepth[pos] = findDepth->value(pos);
         if(findTrade->contains(pos))
-            trade->insert(pos,findTrade->value(pos));
+            addrTrade[pos] = findTrade->value(pos);
         std::cout << "reRange step 3: " << pos << std::endl;
         ufBlock list = getLastDep();
         std::cout << "reRange step 4" << std::endl;
