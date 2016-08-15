@@ -107,6 +107,7 @@ ufBlock& WsTask::getLastDep(){
 ufBlock& WsTask::getLastTrades(ufBlock &listDepth){
     for(auto iter = trade->cbegin();iter!=trade->cend();  ++iter){
         uint period = iter.key();
+        std::cout << "reRange getLastTrades: " << period << std::endl;
         if(!iter.value().contains(step->type))
             continue;
         if(!listDepth.contains(period)){
@@ -193,7 +194,6 @@ ufBlock WsTask::getStep(){
 void WsTask::getRange(ufBlock &listDepth){
     for(auto iter = trade->cbegin();iter!=trade->cend();  ++iter){
         uint period = iter.key();
-        std::cout << "getRange: " << period << std::endl;
         if(!iter.value().contains(step->type))
             continue;
         if(!listDepth.contains(period)){
