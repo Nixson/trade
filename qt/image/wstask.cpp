@@ -7,7 +7,9 @@ WsTask::WsTask(iTask *stepTask, QObject *parent) : QObject(parent),
                                                    step(stepTask),
                                                    result(new iTaskResult),
                                                    trade(new iTradesData),
-                                                   depth(new QHash<uint,iDepth>){}
+                                                   findTrade(new iTradesData),
+                                                   depth(new QHash<uint,iDepth>),
+                                                   findDepth(new QHash<uint,iDepth>){}
 
 void WsTask::run(){
     Memory::get(step->PeriodStart,step->PeriodStop,*trade);
