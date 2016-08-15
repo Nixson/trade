@@ -46,11 +46,12 @@ void WsTask::run(){
     for(uint pos = last20; pos <= step->PeriodStop; ++pos){
         trade->clear();
         depth->clear();
+
         if(findDepth->contains(pos))
             depth->insert(pos,findDepth->value(pos));
         if(findTrade->contains(pos))
             trade->insert(pos,findTrade->value(pos));
-        std::cout << "reRange step 3" << std::endl;
+        std::cout << "reRange step 3: " << pos << std::endl;
         ufBlock list = getLastDep();
         std::cout << "reRange step 4" << std::endl;
         getRange(list);
@@ -99,7 +100,7 @@ ufBlock& WsTask::getLastDep(){
         else
             bl.range = 0.0;
         std::cout << "reRange getLastDep: " << bl.dtime << std::endl;
-        nextStep.insert(bl.dtime,bl);
+        nextStep[bl.dtime] = bl;
     }
     std::cout << "reRange nextStep: " << nextStep.size() << std::endl;
     return getLastTrades(nextStep);
