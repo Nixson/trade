@@ -98,6 +98,7 @@ ufBlock& WsTask::getLastDep(){
             bl.range = (float)cntA/(float)cntB;
         else
             bl.range = 0.0;
+        std::cout << "reRange getLastDep: " << bl.dtime << std::endl;
         nextStep.insert(bl.dtime,bl);
     }
     std::cout << "reRange nextStep: " << nextStep.size() << std::endl;
