@@ -56,7 +56,7 @@ void WsTask::run(){
             std::cout << "WsTask depth: " << info.key() << std::endl;
         }
 
-        ufBlock list = getLastDep(pos);
+        umBlock list = getLastDep(pos);
         for(auto info = list.begin(); info != list.end(); ++info){
             std::cout << "WsTask getLastDep: " << info.key() << std::endl;
         }
