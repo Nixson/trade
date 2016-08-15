@@ -232,13 +232,48 @@ void WsTask::getRange(ufBlock &listDepth){
     }
 }
 
-
-
-
-
+void WsTask::getRange(umBlock &listDepth){
+    for(auto iter = trade.cbegin();iter!=trade.cend();  ++iter){
+        uint period = iter.key();
+        if(!iter.value().contains(step->type))
+            continue;
+        if(!listDepth.contains(period)){
+            bool find = false;
+            infoBlock bdata;
+            bdata.dtime = period;
+            bdata.asks = 0;
+            bdata.bids = 0;
+            bdata.range = 0.0;
+            for(uint subperiod = period; subperiod > period - 10; --subperiod){
+                if(listDepth.contains(subperiod)){
+                    find = true;
+                    bdata.asks = listDepth[subperiod].asks;
+                    bdata.bids = listDepth[subperiod].bids;
+                    bdata.range = listDepth[subperiod].range;
+                }
+            }
+            if(!find)
+                continue;
+            listDepth[period] =bdata;
+        }
+        iTrades td = iter.value()[step->type];
+        foreach (iTrade tradeElement, td) {
+            listDepth[period].price.append(tradeElement.price);
+        }
+    }
+}
 
 
 void WsTask::updTmpTable(ufBlock &rest){
+    umBlock subrest;
+    for(auto info = rest.cbegin(); info!=rest.cend();++info)
+        subrest[info.key()] = info.value();
+    updTmpTable(subrest);
+}
+
+
+
+void WsTask::updTmpTable(umBlock &rest){
     QDateTime current = QDateTime::currentDateTime();
     uint cTime = current.toTime_t();
 
