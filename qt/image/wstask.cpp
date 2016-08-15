@@ -43,9 +43,11 @@ void WsTask::run(){
     std::cout << "WsTask next: " << findTrade.size() << ":" << findDepth.size() << std::endl;
 
     for(uint pos = last20; pos <= step->PeriodStop; ++pos){
+        std::cout << "WsTask clear: " << pos << std::endl;
         trade.clear();
         depth.clear();
 
+        std::cout << "WsTask insert: " << pos << std::endl;
         if(findDepth.contains(pos))
             depth[pos] = findDepth[pos];
         if(findTrade.contains(pos))
