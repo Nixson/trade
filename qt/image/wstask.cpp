@@ -33,11 +33,12 @@ void WsTask::run(){
     getMax();
 
     //step->rate
+    std::cout << "reRange step 1" << std::endl;
     ufBlock list = getStep();
     getRange(list);
     updTmpTable(list);
     reRange();
-    std::cout << "reRange" << std::endl;
+    std::cout << "reRange step 2" << std::endl;
 
     for(uint pos = last20; pos <= step->PeriodStop; ++pos){
         trade->clear();
