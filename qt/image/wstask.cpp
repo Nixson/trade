@@ -235,12 +235,14 @@ void WsTask::updTmpTable(ufBlock &rest){
 
     for (auto i = rest.begin(); i != rest.end(); ++i){
         infoBlock info = i.value();
+        std::cout << "updTmpTable rest begin:" << i.value() << std::endl;
         if(info.dtime > rate.lastPeriod){
             rate.lastRange = info.range;
         }
         if(info.price.size() == 0)
             continue;
-        tmpUser.insert(i.key(),info);
+        std::cout << "updTmpTable rest tmpUser:" << i.value() << std::endl;
+        tmpUser[i.key()] = info;
     }
     rate.min = 0.0;
     rate.max = 0.0;
