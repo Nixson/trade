@@ -52,10 +52,12 @@ void WsTask::run(){
             trade->insert(pos,findTrade->value(pos));
         std::cout << "reRange step 3" << std::endl;
         ufBlock list = getLastDep();
-        getRange(list);
-        updTmpTable(list);
-        reRange();
         std::cout << "reRange step 4" << std::endl;
+        getRange(list);
+        std::cout << "reRange step 5" << std::endl;
+        updTmpTable(list);
+        std::cout << "reRange step 6" << std::endl;
+        reRange();
     }
 
     std::cout << "WsTask" <<  rangeUser.size() << std::endl;
