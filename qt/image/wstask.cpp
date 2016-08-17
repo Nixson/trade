@@ -95,7 +95,6 @@ void WsTask::getLastDep(uint pos){
             bl.range = (float)cntA/(float)cntB;
         else
             bl.range = 0.0;
-        std::cout << "WsTask getLastDep: " << bl.dtime << std::endl;
         listDepth[bl.dtime] = bl;
     }
     getLastTrades(pos);
