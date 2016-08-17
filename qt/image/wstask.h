@@ -40,7 +40,7 @@ private:
     void getMax();
     ufBlock getStep();
     void getRange(ufBlock &listDepth);
-    void getRange(umBlock &listDepth);
+    void getRange(uint per, umBlock &listDepth);
     void updTmpTable(ufBlock &rest);
     void updTmpTable(umBlock &rest);
     void subRange();

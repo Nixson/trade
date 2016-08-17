@@ -46,7 +46,7 @@ void WsTask::run(){
         if(findTrade.contains(pos))
             trade[pos] = findTrade[pos];
         getLastDep(pos);
-        getRange(listDepth);
+        getRange(pos,listDepth);
         updTmpTable(listDepth);
         reRange();
     }
@@ -217,9 +217,11 @@ void WsTask::getRange(ufBlock &listDepth){
     }
 }
 
-void WsTask::getRange(umBlock &listDepth){
+void WsTask::getRange(uint per, umBlock &listDepth){
     for(auto iter = trade.cbegin();iter!=trade.cend();  ++iter){
         uint period = iter.key();
+        if(per > period)
+            continue;
         if(!iter.value().contains(step->type))
             continue;
         if(!listDepth.contains(period)){
