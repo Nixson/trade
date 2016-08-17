@@ -43,21 +43,24 @@ void WsTask::run(){
     std::cout << "WsTask next: " << findTrade.size() << ":" << findDepth.size() << std::endl;
 
     for(uint pos = last20; pos <= step->PeriodStop; ++pos){
-        std::cout << "WsTask insert: " << pos << std::endl;
         if(findDepth.contains(pos))
             depth[pos] = findDepth[pos];
         if(findTrade.contains(pos))
             trade[pos] = findTrade[pos];
-        std::cout << "WsTask next: " << trade.size() << ":" << depth.size() << std::endl;
         getLastDep(pos);
         getRange(listDepth);
-        std::cout << "WsTask getRange: " << listDepth.size() << std::endl;
         updTmpTable(listDepth);
-        std::cout << "WsTask updTmpTable: " << listDepth.size() << std::endl;
         reRange();
     }
 
-    std::cout << "WsTask" <<  rangeUser.size() << std::endl;
+    std::cout << "WsTask: " <<  rangeUser.size() << std::endl;
+
+    foreach(auto rng, rangeUser){
+        if(rng.response)
+            ++result->good;
+        else
+            ++result->bad;
+    }
 
     emit response(step, result);
 }
@@ -314,7 +317,9 @@ void WsTask::updTmpTable(umBlock &rest){
                             rangeUser.append(rsp);
                         lastAsc.remove(0);
                     }
+                    else ++result->lost;
                 }
+                else ++result->lost;
             }
 
 

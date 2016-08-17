@@ -35,6 +35,7 @@ private:
     QHash <int, strTable> lastAsc;
     QVector<tmpTable>  rateUser;
     QVector< strResponse > rangeUser;
+    uint                missing;
 
     void getMax();
     ufBlock getStep();
