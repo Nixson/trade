@@ -56,17 +56,17 @@ void WsTask::run(){
             std::cout << "WsTask depth: " << info.key() << std::endl;
         }
 
-        umBlock list = getLastDep(pos);
-        for(auto info = list.begin(); info != list.end(); ++info){
+        getLastDep(pos);
+        for(auto info = listDepth.begin(); info != listDepth.end(); ++info){
             std::cout << "WsTask getLastDep: " << info.key() << std::endl;
         }
-        getRange(list);
-        for(auto info = list.begin(); info != list.end(); ++info){
+        getRange(listDepth);
+        for(auto info = listDepth.begin(); info != listDepth.end(); ++info){
             std::cout << "WsTask getRange: " << info.key() << std::endl;
         }
-        std::cout << "WsTask getRange: " << list.size() << std::endl;
-        updTmpTable(list);
-        std::cout << "WsTask updTmpTable: " << list.size() << std::endl;
+        std::cout << "WsTask getRange: " << listDepth.size() << std::endl;
+        updTmpTable(listDepth);
+        std::cout << "WsTask updTmpTable: " << listDepth.size() << std::endl;
         reRange();
     }
 
@@ -75,8 +75,7 @@ void WsTask::run(){
     emit response(step, result);
 }
 
-umBlock& WsTask::getLastDep(uint pos){
-    umBlock nextStep;
+void WsTask::getLastDep(uint pos){
     for(auto iter = depth.cbegin();iter!=depth.cend();  ++iter){
         if(iter.key() < pos)
             continue;
@@ -111,14 +110,16 @@ umBlock& WsTask::getLastDep(uint pos){
         else
             bl.range = 0.0;
         std::cout << "WsTask getLastDep: " << bl.dtime << std::endl;
-        nextStep[bl.dtime] = bl;
+        listDepth[bl.dtime] = bl;
     }
-    return getLastTrades(nextStep);
+    getLastTrades(pos);
 }
 
-umBlock &WsTask::getLastTrades(umBlock &listDepth){
+void WsTask::getLastTrades(uint pos){
     for(auto iter = trade.cbegin();iter!=trade.cend();  ++iter){
         uint period = iter.key();
+        if(period < pos)
+            continue;
         if(!iter.value().contains(step->type))
             continue;
         if(!listDepth.contains(period)){
@@ -142,7 +143,6 @@ umBlock &WsTask::getLastTrades(umBlock &listDepth){
             listDepth[period].price.append(tradeElement.price);
         }
     }
-    return listDepth;
 }
 
 void WsTask::getMax(){

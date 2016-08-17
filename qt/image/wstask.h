@@ -45,8 +45,11 @@ private:
     void subRange();
     void reRange();
 
-    umBlock &getLastDep(uint pos);
-    umBlock& getLastTrades(umBlock &listDepth);
+    void getLastDep(uint pos);
+    void getLastTrades(uint pos);
+
+    umBlock listDepth;
+
 };
 
 #endif // WSTASK_H
