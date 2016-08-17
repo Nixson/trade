@@ -49,21 +49,8 @@ void WsTask::run(){
         if(findTrade.contains(pos))
             trade[pos] = findTrade[pos];
         std::cout << "WsTask next: " << trade.size() << ":" << depth.size() << std::endl;
-        for(auto info = trade.begin(); info != trade.end(); ++info){
-            std::cout << "WsTask trade: " << info.key() << std::endl;
-        }
-        for(auto info = depth.begin(); info != depth.end(); ++info){
-            std::cout << "WsTask depth: " << info.key() << std::endl;
-        }
-
         getLastDep(pos);
-        for(auto info = listDepth.begin(); info != listDepth.end(); ++info){
-            std::cout << "WsTask getLastDep: " << info.key() << std::endl;
-        }
         getRange(listDepth);
-        for(auto info = listDepth.begin(); info != listDepth.end(); ++info){
-            std::cout << "WsTask getRange: " << info.key() << std::endl;
-        }
         std::cout << "WsTask getRange: " << listDepth.size() << std::endl;
         updTmpTable(listDepth);
         std::cout << "WsTask updTmpTable: " << listDepth.size() << std::endl;
