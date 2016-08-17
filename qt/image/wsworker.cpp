@@ -120,5 +120,8 @@ void WsWorker::response(iTask *step, iTaskResult *result){
     user[step->iduser].result.append(result);
     if((uint)user[step->iduser].task.length() == user[step->iduser].tasks){
         std::cout << "responseOut" << std::endl;
+        foreach (auto info, user[step->iduser].result) {
+            std::cout << "result: " << info->good << ":\t" << info->bad << ":\t" << info->lost << std::endl;
+        }
     }
 }

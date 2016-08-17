@@ -27,7 +27,6 @@ void WsTask::run(){
             depth.remove(pos);
         }
     }
-    std::cout << "WsTask start: " << trade.size() << ":" << depth.size() << std::endl;
 
 
 
@@ -40,7 +39,6 @@ void WsTask::run(){
     getRange(list);
     updTmpTable(list);
     reRange();
-    std::cout << "WsTask next: " << findTrade.size() << ":" << findDepth.size() << std::endl;
 
     for(uint pos = last20; pos <= step->PeriodStop; ++pos){
         if(findDepth.contains(pos))
@@ -52,8 +50,6 @@ void WsTask::run(){
         updTmpTable(listDepth);
         reRange();
     }
-
-    std::cout << "WsTask: " <<  rangeUser.size() << std::endl;
 
     foreach(auto rng, rangeUser){
         if(rng.response)
