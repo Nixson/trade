@@ -39,6 +39,8 @@ void WsTask::run(){
     getRange(list);
     updTmpTable(list);
     reRange();
+    depth.clear();
+    trade.clear();
 
     for(uint pos = last20; pos <= step->PeriodStop; ++pos){
         if(findDepth.contains(pos))
