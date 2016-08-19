@@ -143,8 +143,8 @@ void WsWorker::response(iTask *step, iTaskResult *result){
             }
             std::cout << "result: " << info->good << ":\t" << info->bad << ":\t" << est << std::endl;
         }
-        std::cout << "best: " << good << endl;
-        std::cout << "bed: " << bad << endl;
+        std::cout << "best: " << good << std::endl;
+        std::cout << "bed: " << bad << std::endl;
         user[step->iduser].tasks = 0;
     }
 }
