@@ -50,7 +50,7 @@ private:
     QHash <int, ufBlock>         tmpUser;
     QHash <int, iWsUser>         user;
     uint                         last;
-    void                         poolIn(iTask *task);
+    void                         poolIn(iTask task);
 
 };
 

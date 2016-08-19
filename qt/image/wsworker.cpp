@@ -104,7 +104,7 @@ void WsWorker::processTextMessage(QString message){
                     task.PeriodStop = currentInt;
                     task.rate = (float)rate;
                     task.perc = price;
-                    poolIn(&task);
+                    poolIn(task);
                     ++user[idusersocs].tasks;
                 }
             }
@@ -113,8 +113,8 @@ void WsWorker::processTextMessage(QString message){
     }
 
 }
-void WsWorker::poolIn(iTask *task){
-    WsTask *wtask = new WsTask(task);
+void WsWorker::poolIn(iTask task){
+    WsTask *wtask = new WsTask(&task);
     connect(wtask,&WsTask::response,this,&WsWorker::response);
     QThreadPool::globalInstance()->start(wtask);
 }
