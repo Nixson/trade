@@ -108,8 +108,11 @@ void WsWorker::processTextMessage(QString message){
                     connect(wtask,&WsTask::response,this,&WsWorker::response);
                     QThreadPool::globalInstance()->start(wtask);
                     ++user[idusersocs].tasks;
+                    break;
                 }
+                break;
             }
+            break;
         }
         std::cout << "QThreadPool start: " << user[idusersocs].tasks << std::endl;
     }
