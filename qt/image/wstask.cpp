@@ -3,13 +3,14 @@
 #include <iostream>
 #include <QDateTime>
 
-WsTask::WsTask(iTask *stepTask, QObject *parent) : QObject(parent),
-                                                   step(stepTask),
+WsTask::WsTask(iTask stepTask, QObject *parent) : QObject(parent),
+                                                   stepOb(stepTask),
                                                    result(new iTaskResult),
                                                    tradeLink(new iTradesData),
                                                    depthLink(new QHash<uint,iDepth>){}
 
 void WsTask::run(){
+    step = &stepOb;
     result->bad = 0;
     result->good = 0;
     result->lost = 0;

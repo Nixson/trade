@@ -115,7 +115,7 @@ void WsWorker::processTextMessage(QString message){
 
 }
 void WsWorker::poolIn(iTask task){
-    WsTask *wtask = new WsTask(&task);
+    WsTask *wtask = new WsTask(task);
     connect(wtask,&WsTask::response,this,&WsWorker::response);
     QThreadPool::globalInstance()->start(wtask);
 }
