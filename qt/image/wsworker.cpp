@@ -104,7 +104,6 @@ void WsWorker::processTextMessage(QString message){
                     task.PeriodStop = currentInt;
                     task.rate = (float)rate;
                     task.perc = price;
-                    std::cout << "pool: " << task.PeriodStart << " : " << rate << std::endl;
                     poolIn(task);
                     ++user[idusersocs].tasks;
                 }
@@ -124,9 +123,28 @@ void WsWorker::response(iTask *step, iTaskResult *result){
     user[step->iduser].result.append(result);
     if((uint)user[step->iduser].task.length() == user[step->iduser].tasks){
         std::cout << "responseOut" << std::endl;
-        foreach (auto info, user[step->iduser].result) {
-            std::cout << "result: " << info->good << ":\t" << info->bad << ":\t" << info->lost << std::endl;
+        float bad = 0.0;
+        float good = 0.0;
+        iTask *goodStep;
+
+        for (auto infoIter = user[step->iduser].result.cbegin(); infoIter!=user[step->iduser].result.cend(); ++infoIter) {
+            auto info = infoIter.value();
+            float est = 0.0;
+            if(info->bad > 0){
+                est = (float)info->good/info->bad;
+                if(bad==0.0)
+                    bad = est;
+                else if(bad > est)
+                    bad = est;
+            }
+            if(good < est){
+                good = est;
+                goodStep = user[step->iduser].task[infoIter.key()];
+            }
+            std::cout << "result: " << info->good << ":\t" << info->bad << ":\t" << est << std::endl;
         }
+        std::cout << "best: " << good << endl;
+        std::cout << "bed: " << bad << endl;
         user[step->iduser].tasks = 0;
     }
 }
