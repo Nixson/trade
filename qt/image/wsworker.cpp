@@ -104,6 +104,7 @@ void WsWorker::processTextMessage(QString message){
                     task.PeriodStop = currentInt;
                     task.rate = (float)rate;
                     task.perc = price;
+                    std::cout << "pool: " << task.PeriodStart << " : " << rate << std::endl;
                     poolIn(task);
                     ++user[idusersocs].tasks;
                 }
