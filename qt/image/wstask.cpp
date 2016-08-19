@@ -63,7 +63,13 @@ void WsTask::run(){
             ++result->bad;
     }
 
-    std::cout << rangeUser.length() << std::endl;
+    std::cout << step->iduser << " type: " <<
+    step->type << " PeriodStart: " <<
+    step->PeriodStart << " PeriodStop: " <<
+    step->PeriodStop << " rate: " <<
+    step->rate << " perc: " <<
+    step->perc << " count: " << rangeUser.length() << std::endl;
+    std::cout << std::endl;
 
     emit response(step, result);
 }
