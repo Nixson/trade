@@ -6,7 +6,6 @@
 #include <QHash>
 #include <QMap>
 #include <QDataStream>
-#include <iostream>
 
 typedef struct iPair_str {
     float price;

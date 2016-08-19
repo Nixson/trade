@@ -91,9 +91,7 @@ int wok (int argc, char *argv[]){
       //return 0;
     return  a.exec();
 }
-std::ostream& operator << (std::ostream &o,const iTaskResult_struct &a){
-  return o << "lost: " << a.lost << "\tbad: " << a.bad << "\tgood: " << a.good << std::endl;
-}
+
 int main(int argc, char *argv[])
 {
     std::cout << "argc: " << argc << std::endl;
