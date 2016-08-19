@@ -152,7 +152,7 @@ void WsWorker::response(iTask *step, iTaskResult *result){
             QDateTime current = QDateTime::currentDateTime();
             uint currentInt = current.toTime_t() - goodStep->PeriodStart;
             QString msg = QString::number(currentInt)+":"+QString::number(goodStep->perc)+":"+QString::number(goodStep->rate);
-            am_clients[step->iduser]->sendTextMessage(message);
+            am_clients[step->iduser]->sendTextMessage(msg);
         }
         user[step->iduser].tasks = 0;
     }
