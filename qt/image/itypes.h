@@ -6,11 +6,13 @@
 #include <QHash>
 #include <QMap>
 #include <QDataStream>
+#include <iostream>
 
 typedef struct iPair_str {
     float price;
     float amount;
 } iPair;
+
 
 typedef struct iRate_str {
     QString type;
@@ -40,6 +42,10 @@ typedef struct iTaskResult_struct {
     uint bad;
     uint good;
 } iTaskResult;
+
+
+
+
 
 typedef struct Pair_str {
     float max;

@@ -60,6 +60,8 @@ void WsTask::run(){
             ++result->bad;
     }
 
+    std::cout << result << std::endl;
+
     emit response(step, result);
 }
 
