@@ -60,7 +60,7 @@ void WsTask::run(){
             ++result->bad;
     }
 
-    std::cout << result << std::endl;
+    std::cout << rangeUser.length() << std::endl;
 
     emit response(step, result);
 }
