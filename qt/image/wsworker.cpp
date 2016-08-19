@@ -104,9 +104,7 @@ void WsWorker::processTextMessage(QString message){
                     task.PeriodStop = currentInt;
                     task.rate = (float)rate;
                     task.perc = price;
-                    WsTask *wtask = new WsTask(&task);
-                    connect(wtask,&WsTask::response,this,&WsWorker::response);
-                    QThreadPool::globalInstance()->start(wtask);
+                    poolIn(&task);
                     ++user[idusersocs].tasks;
                 }
             }
@@ -114,6 +112,11 @@ void WsWorker::processTextMessage(QString message){
         std::cout << "QThreadPool start: " << user[idusersocs].tasks << std::endl;
     }
 
+}
+void WsWorker::poolIn(iTask *task){
+    WsTask *wtask = new WsTask(task);
+    connect(wtask,&WsTask::response,this,&WsWorker::response);
+    QThreadPool::globalInstance()->start(wtask);
 }
 void WsWorker::response(iTask *step, iTaskResult *result){
     user[step->iduser].task.append(step);
