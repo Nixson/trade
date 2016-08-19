@@ -125,7 +125,8 @@ void WsWorker::response(iTask *step, iTaskResult *result){
         std::cout << "responseOut" << std::endl;
         float bad = 0.0;
         float good = 0.0;
-        iTask *goodStep;
+        iTask *goodStep = new iTask();
+        bool find = false;
 
         for (auto key = 0; key < user[step->iduser].result.length(); ++key) {
             auto info = user[step->iduser].result[key];
@@ -140,11 +141,19 @@ void WsWorker::response(iTask *step, iTaskResult *result){
             if(good < est){
                 good = est;
                 goodStep = user[step->iduser].task[key];
+                if(good > 1.2)
+                    find = true;
             }
             std::cout << "result: " << info->good << ":\t" << info->bad << ":\t" << est << std::endl;
         }
         std::cout << "best: " << good << std::endl;
         std::cout << "bed: " << bad << std::endl;
+        if(find){
+            QDateTime current = QDateTime::currentDateTime();
+            uint currentInt = current.toTime_t() - goodStep->PeriodStart;
+            QString msg = QString::number(currentInt)+":"+QString::number(goodStep->perc)+":"+QString::number(goodStep->rate);
+            am_clients[step->iduser]->sendTextMessage(message);
+        }
         user[step->iduser].tasks = 0;
     }
 }

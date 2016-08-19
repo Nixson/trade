@@ -36,9 +36,9 @@ void WsTask::run(){
 
 
     rate.lastPeriod = 0;
+    stepRate = step->rate;
     getMax();
 
-    //step->rate
     ufBlock list = getStep();
     getRange(list);
     updTmpTable(list);
@@ -83,14 +83,14 @@ void WsTask::getLastDep(uint pos){
         foreach (iPair pr, ascPair){
             ++cntA;
             summ += pr.amount;
-            if(summ >=step->rate)
+            if(summ >=stepRate)
                 break;
         }
         summ = 0.0;
         foreach (iPair pr, bidPair){
             ++cntB;
             summ += pr.amount;
-            if(summ >=step->rate)
+            if(summ >=stepRate)
                 break;
         }
         infoBlock bl;
@@ -147,7 +147,7 @@ void WsTask::getMax(){
                 max = tradeElement.amount;
         }
     }
-    step->rate *=max;
+    stepRate *=max;
 }
 bool WsTask::Asort(iPair a, iPair b){
     return a.price < b.price;
@@ -170,14 +170,14 @@ ufBlock WsTask::getStep(){
         foreach (iPair pr, ascPair){
             ++cntA;
             summ += pr.amount;
-            if(summ >=step->rate)
+            if(summ >=stepRate)
                 break;
         }
         summ = 0.0;
         foreach (iPair pr, bidPair){
             ++cntB;
             summ += pr.amount;
-            if(summ >=step->rate)
+            if(summ >=stepRate)
                 break;
         }
         infoBlock bl;

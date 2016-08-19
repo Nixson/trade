@@ -23,6 +23,7 @@ private:
     umBlock             tmpUser;
     iTask               stepOb, *step;
     iRate               rate;
+    float               stepRate;
     iTaskResult         *result;
     iTradesData         *tradeLink, findTrade;
     QHash<uint,iDepth>  *depthLink, findDepth;
