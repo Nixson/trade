@@ -63,8 +63,8 @@ void WsTask::run(){
             ++result->bad;
     }
 
-    std::cout << step->iduser << " type: " << std::endl;
-    std::cout << step->type << " PeriodStart: "
+    std::cout << step->iduser << " type: "
+              << step->type.toStdString() << " PeriodStart: "
               << step->PeriodStart << " PeriodStop: "
               << step->PeriodStop << " rate: "
               << step->rate << " perc: "
