@@ -10,6 +10,9 @@ WsTask::WsTask(iTask *stepTask, QObject *parent) : QObject(parent),
                                                    depthLink(new QHash<uint,iDepth>){}
 
 void WsTask::run(){
+    result->bad = 0;
+    result->good = 0;
+    result->lost = 0;
     Memory::get(step->PeriodStart,step->PeriodStop,*tradeLink);
     Memory::get(step->PeriodStart,step->PeriodStop,*depthLink);
 
