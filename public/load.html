@@ -68,6 +68,7 @@
 				</div>
 			</div>
 		</form>
+		<div id="dtime"></div>
 
   	</div>
   	<div class="col-sm-6">
@@ -199,8 +200,13 @@
 			},
 			onmessageRange: function(msg){
 				var self = this;
-				this.stop();
-				try {
+				var stimer = new Date.getTime();
+				console.log(msg);
+
+				$("#dtime").text( ((stimer - this.stimer)/1000 ).toFixed(2) + "сек." );
+
+				this.close();
+				/*try {
 					var sj = JSON.parse(msg.data);
 					var findRange = $("#findRange").val(sj.time);
 					var viewRange = $("#findRange").val(sj.time);
@@ -210,7 +216,7 @@
 				}
 				catch(err){
 					console.log(onmessageRange,msg);
-				}
+				}*/
 			},
 			onmessage: function(msg){
 				console.log("socket onmessage");
@@ -347,8 +353,12 @@
 			},
 			closeRange: function(){
 				this.range.close();
+				clearTimeout(this.timer);
 			},
+			stimer: null,
 			workRange: function(){
+				var self = this;
+				this.stimer = new Date.getTime();
 				var list = '';
 				if(typeof window.localStorage != 'undefined'){
 					window.localStorage.setItem("input.time",$("#w-time").val());
@@ -366,7 +376,10 @@
 				list += ( parseInt($('#w-proc').val()) || 0 ).toString();
 				if(this.range != null)
 					this.range.send(list);
+				this.timer = setTimeout(function(){	self.workRange();},600000);
 			},
+			timer: null,
+
 			work: function(){
 				var pair = $("#pair").val();
 				var findRange = $("#findRange").val();
