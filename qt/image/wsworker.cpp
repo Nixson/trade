@@ -127,8 +127,8 @@ void WsWorker::response(iTask *step, iTaskResult *result){
         float good = 0.0;
         iTask *goodStep;
 
-        for (auto infoIter = user[step->iduser].result.cbegin(); infoIter!=user[step->iduser].result.cend(); ++infoIter) {
-            auto info = infoIter.value();
+        for (auto key = 0; key < user[step->iduser].result.length(); ++key) {
+            auto info = user[step->iduser].result[key];
             float est = 0.0;
             if(info->bad > 0){
                 est = (float)info->good/info->bad;
@@ -139,7 +139,7 @@ void WsWorker::response(iTask *step, iTaskResult *result){
             }
             if(good < est){
                 good = est;
-                goodStep = user[step->iduser].task[infoIter.key()];
+                goodStep = user[step->iduser].task[key];
             }
             std::cout << "result: " << info->good << ":\t" << info->bad << ":\t" << est << std::endl;
         }
