@@ -187,7 +187,7 @@
 				self.range = new WebSocket("ws://trade.bhelp.com/convert");
 				self.range.onopen = function(){console.log("convert connect");};
 				self.range.onclose = function(){console.log("convert onclose"); self.range = null; setTimeout(function(){self.buildRange();},2000);};
-				self.range.onmessage = self.onmessageRange;
+				self.range.onmessage = function(msg){self.onmessageRange(msg););
 			},
 			reWork: function(){
 				var self = this;
@@ -359,7 +359,6 @@
 			stimer: 0,
 			workRange: function(){
 				this.stimer = Date.now();
-				console.log(this);
 				var self = this;
 				var list = '';
 				if(typeof window.localStorage != 'undefined'){
