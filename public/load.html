@@ -386,6 +386,7 @@
 			timer: null,
 
 			work: function(){
+				var self = this;
 				var pair = $("#pair").val();
 				var findRange = $("#findRange").val();
 				var viewRange = $("#findRange").val();
@@ -397,6 +398,7 @@
 					this.sock.send(pair+";"+findRange+";"+ viewRange +";"+ rate+";"+proc);
 				}else {
 					console.log("error work");
+					setTimeout(function(){self.work();},500);
 				}
 			},
 			initRange: function(){
