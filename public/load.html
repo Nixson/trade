@@ -69,7 +69,15 @@
 			</div>
 		</form>
 		<br /><br />
-		<div id="dtime"></div>
+			<div class="row">
+				<div class="col-xs-6">
+					<div id="dtime"></div>
+				</div>
+				<div class="col-xs-6">
+					<div id="dInterval"></div>
+				</div>
+			</div>
+
 
   	</div>
   	<div class="col-sm-6">
@@ -358,10 +366,12 @@
 			},
 			closeRange: function(){
 				this.range.close();
-				clearTimeout(this.timer);
+				clearInterval(this.timer);
 			},
 			stimer: 0,
+			nextRange: 600,
 			workRange: function(){
+				console.log("workRange");
 				this.stimer = Date.now();
 				var self = this;
 				var list = '';
@@ -379,9 +389,22 @@
 				list += ( parseInt($('#w-procSliderResultIn').text()) || 0 ).toString() + ';';
 				list += ( parseInt($('#w-procSliderResultOut').text()) || 0 ).toString() + ';';
 				list += ( parseInt($('#w-proc').val()) || 0 ).toString();
-				if(this.range != null)
+				if(this.range != null){
 					this.range.send(list);
-				this.timer = setTimeout(function(){	self.workRange();},600000);
+					this.nextRange = 600;
+					this.timer = setInterval(function(){}{
+						self.nextRange--;
+						$("#dInterval").text(self.nextRange);
+						if(self.nextRange == 0){
+							clearInterval(this.timer);
+							self.workRange();
+						}
+					},1000);
+					//this.timer = setTimeout(function(){	self.workRange();},600000);
+				}
+				else {
+					setTimeout(function(){self.workRange();});
+				}
 			},
 			timer: null,
 
