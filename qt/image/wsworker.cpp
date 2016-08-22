@@ -106,6 +106,7 @@ void WsWorker::processTextMessage(QString message){
                     task.perc = price;
                     poolIn(task);
                     ++user[idusersocs].tasks;
+                    ++user[idusersocs].taskLast;
                 }
             }
         }
@@ -121,8 +122,10 @@ void WsWorker::poolIn(iTask task){
 void WsWorker::response(iTask *step, iTaskResult *result){
     user[step->iduser].task.append(step);
     user[step->iduser].result.append(result);
+    --user[step->iduser].taskLast;
+    std::cout << "\r" << user[step->iduser].taskLast << std::end;
     if((uint)user[step->iduser].task.length() == user[step->iduser].tasks){
-        std::cout << "responseOut" << std::endl;
+        std::cout << "\nresponseOut" << std::endl;
         float bad = 0.0;
         float good = 0.0;
         iTask *goodStep = new iTask();

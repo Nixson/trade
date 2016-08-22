@@ -20,6 +20,7 @@ typedef struct iWsUser_str {
     float priceOut;
     uint priceRange;
     uint tasks;
+    uint taskLast;
     QVector <iTask *> task;
     QVector <iTaskResult *> result;
 } iWsUser;
