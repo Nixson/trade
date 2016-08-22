@@ -207,7 +207,9 @@
 						self.reWork();
 				},500);
 			},
+			onload: false,
 			onmessageRange: function(msg){
+				this.onload = false;
 				console.log(msg.data);
 				var self = this;
 				var stimer = Date.now();
@@ -394,6 +396,7 @@
 					this.range.send(list);
 					this.nextRange = 600;
 					this.timer = true;
+					this.onload = true;
 					this.nextTime();
 					//this.timer = setTimeout(function(){	self.workRange();},600000);
 				}
@@ -406,6 +409,9 @@
 				var self = this;
 				if(!self.timer)
 					return;
+				if(this.onload){
+					$("#dtime").text("Loading");
+				}
 				self.nextRange--;
 				$("#dInterval").text(self.nextRange);
 				if(self.nextRange == 0){
