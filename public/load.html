@@ -221,10 +221,12 @@
 
 				this.resultG += this.resultGtmp;
 				this.resultR += this.resultRtmp;
+				if(data.dtime > 0){
+					$("#findRange").val(data.dtime);
+					$("#rate").val(data.rate);
+					$("#proc").val(data.perc);
+				}
 
-				$("#findRange").val(data.dtime);
-				$("#rate").val(data.rate);
-				$("#proc").val(data.perc);
 				setTimeout(function(){self.work();},3000);
 				/*try {
 					var sj = JSON.parse(msg.data);
