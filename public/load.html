@@ -217,6 +217,7 @@
 				$("#dtime").text( ((stimer - this.stimer)/1000 ).toFixed(2) + "сек." );
 
 				this.close();
+				this.range.close();
 
 				$("#findRange").val(data.dtime);
 				$("#rate").val(data.rate);
@@ -369,7 +370,7 @@
 			},
 			closeRange: function(){
 				this.range.close();
-				this.timer = false;
+				this.reTimer = false;
 			},
 			stimer: 0,
 			nextRange: 600,
@@ -405,9 +406,10 @@
 				}
 			},
 			timer: false,
+			reTimer: false,
 			nextTime: function(){
 				var self = this;
-				if(!self.timer)
+				if(!self.reTimer)
 					return;
 				if(this.onload){
 					$("#dtime").text("Loading");
