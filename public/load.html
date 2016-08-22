@@ -358,7 +358,7 @@
 			stimer: null,
 			workRange: function(){
 				var self = this;
-				this.stimer = new Date.getTime();
+				this.stimer = Date().now();
 				var list = '';
 				if(typeof window.localStorage != 'undefined'){
 					window.localStorage.setItem("input.time",$("#w-time").val());
