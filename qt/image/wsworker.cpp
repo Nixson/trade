@@ -80,8 +80,12 @@ void WsWorker::processTextMessage(QString message){
             user[idusersocs].priceIn    = rsp[6].toFloat();
             user[idusersocs].priceOut   = rsp[7].toFloat();
             user[idusersocs].priceRange = rsp[8].toInt();
+
         }
         catch(...){}
+
+        user[idusersocs].taskLast = 0;
+        user[idusersocs].tasks = 0;
 
         uint timeRange  = (user[idusersocs].timeOut - user[idusersocs].timeIn)/user[idusersocs].timeRange;
         uint rateRange  = (user[idusersocs].rateOut - user[idusersocs].rateIn)/user[idusersocs].rateRange;
