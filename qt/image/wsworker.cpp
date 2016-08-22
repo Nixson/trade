@@ -123,7 +123,7 @@ void WsWorker::response(iTask *step, iTaskResult *result){
     user[step->iduser].task.append(step);
     user[step->iduser].result.append(result);
     --user[step->iduser].taskLast;
-    std::cout << "\r " << user[step->iduser].taskLast << std::end;
+    std::cout << "\r " << user[step->iduser].taskLast;
     if((uint)user[step->iduser].task.length() == user[step->iduser].tasks){
         std::cout << "\n responseOut" << std::endl;
         float bad = 0.0;
