@@ -367,7 +367,7 @@
 			},
 			closeRange: function(){
 				this.range.close();
-				clearInterval(this.timer);
+				this.timer = false;
 			},
 			stimer: 0,
 			nextRange: 600,
@@ -393,22 +393,31 @@
 				if(this.range != null){
 					this.range.send(list);
 					this.nextRange = 600;
-					this.timer = setInterval(function(){
-						self.nextRange--;
-						$("#dInterval").text(self.nextRange);
-						if(self.nextRange == 0){
-							clearInterval(this.timer);
-							self.workRange();
-						}
-					},1000);
+					this.timer = true;
+					this.nextTime();
 					//this.timer = setTimeout(function(){	self.workRange();},600000);
 				}
 				else {
 					setTimeout(function(){self.workRange();});
 				}
 			},
-			timer: null,
-
+			timer: false,
+			nextTime: function(){
+				var self = this;
+				if(!self.timer)
+					return;
+				self.nextRange--;
+				$("#dInterval").text(self.nextRange);
+				if(self.nextRange == 0){
+					self.timer = false;
+					self.workRange();
+				}
+				else {
+					setTimeout(function(){
+						self.nextTime();
+					},1000);
+				}
+			},
 			work: function(){
 				var self = this;
 				var pair = $("#pair").val();
