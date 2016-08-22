@@ -200,7 +200,7 @@
 			},
 			onmessageRange: function(msg){
 				var self = this;
-				var stimer = new Date.getTime();
+				var stimer = new Date().getTime();
 				console.log(msg);
 
 				$("#dtime").text( ((stimer - this.stimer)/1000 ).toFixed(2) + "сек." );
