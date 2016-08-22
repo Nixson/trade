@@ -392,7 +392,7 @@
 				if(this.range != null){
 					this.range.send(list);
 					this.nextRange = 600;
-					this.timer = setInterval(function(){}{
+					this.timer = setInterval(function(){
 						self.nextRange--;
 						$("#dInterval").text(self.nextRange);
 						if(self.nextRange == 0){
