@@ -200,8 +200,9 @@
 			},
 			onmessageRange: function(msg){
 				var self = this;
-				var stimer = new Date().getTime();
-				console.log(msg);
+				var stimer = Date.now();
+				var data = JSON.parse(msg.data);
+				console.log(data);
 
 				$("#dtime").text( ((stimer - this.stimer)/1000 ).toFixed(2) + "сек." );
 
@@ -355,10 +356,10 @@
 				this.range.close();
 				clearTimeout(this.timer);
 			},
-			stimer: null,
+			stimer: 0,
 			workRange: function(){
 				var self = this;
-				this.stimer = new Date().getTime();
+				this.stimer = Date.now();
 				var list = '';
 				if(typeof window.localStorage != 'undefined'){
 					window.localStorage.setItem("input.time",$("#w-time").val());
