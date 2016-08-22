@@ -68,6 +68,7 @@
 				</div>
 			</div>
 		</form>
+		<br /><br />
 		<div id="dtime"></div>
 
   	</div>
@@ -202,11 +203,14 @@
 				var self = this;
 				var stimer = Date.now();
 				var data = JSON.parse(msg.data);
-				console.log(data,stimer,this.stimer,((stimer - this.stimer)/1000 ).toFixed(2));
-
 				$("#dtime").text( ((stimer - this.stimer)/1000 ).toFixed(2) + "сек." );
 
 				this.close();
+
+				$("#findRange").val(data.dtime);
+				$("#rate").val(data.rate);
+				$("#proc").val(data.perc);
+				setTimeout(function(){self.work();},1000);
 				/*try {
 					var sj = JSON.parse(msg.data);
 					var findRange = $("#findRange").val(sj.time);
