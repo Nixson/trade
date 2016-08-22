@@ -208,6 +208,7 @@
 				},500);
 			},
 			onmessageRange: function(msg){
+				console.log(msg.data);
 				var self = this;
 				var stimer = Date.now();
 				var data = JSON.parse(msg.data);
