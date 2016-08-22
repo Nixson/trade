@@ -219,6 +219,9 @@
 				this.close();
 				this.range.close();
 
+				this.resultG += this.resultGtmp;
+				this.resultR += this.resultRtmp;
+
 				$("#findRange").val(data.dtime);
 				$("#rate").val(data.rate);
 				$("#proc").val(data.perc);
@@ -360,11 +363,19 @@
 						$("#rtable table").prepend(resp);
 						//cnt--;
 					}
+					this.resultGtmp = resultG;
+					this.resultRtmp = resultR;
+					resultG+=this.resultG;
+					resultR+=this.resultR;
 					resp = '<tr><td style="background: #005500; color: #ffffff;">'+resultG+'</td><td style="background: #550000; color: #ffffff;">'+resultR+'</td></tr>';
 					$("#rtable table").prepend(resp);
 				}
 
 			},
+			resultG: 0,
+			resultR: 0,
+			resultGtmp:0,
+			resultRtmp:0,
 			close: function(){
 				this.sock.close();
 			},
