@@ -144,7 +144,7 @@ void WsWorker::response(iTask *step, iTaskResult *result){
                 if(good > 1.2)
                     find = true;
             }
-            std::cout << "result: " << info->good << ":\t" << info->bad << ":\t" << est << std::endl;
+            //std::cout << "result: " << info->good << ":\t" << info->bad << ":\t" << est << std::endl;
         }
         std::cout << "best: " << good << std::endl;
         std::cout << "bed: " << bad << std::endl;
