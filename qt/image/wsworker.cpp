@@ -126,9 +126,9 @@ void WsWorker::poolIn(iTask task){
 void WsWorker::response(iTask *step, iTaskResult *result){
     int key = user[step->iduser].taskLast;
     --user[step->iduser].taskLast;
-    user[step->iduser].task.insert(key,step);
-    user[step->iduser].result.insert(key,result);
-    std::cout << "\r " << user[step->iduser].taskLast;
+    user[step->iduser].task.append(step);
+    user[step->iduser].result.append(result);
+    std::cout << key << std::endl;
     if((uint)user[step->iduser].task.length() == user[step->iduser].tasks){
         std::cout << "\n responseOut" << std::endl;
         float bad = 0.0;
