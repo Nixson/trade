@@ -3,9 +3,8 @@
 #include <iostream>
 #include <QDateTime>
 
-WsTask::WsTask(iTask stepTask, uint step, QObject *parent) : QObject(parent),
+WsTask::WsTask(iTask stepTask, QObject *parent) : QObject(parent),
                                                    stepOb(stepTask),
-                                                   stepNum(step),
                                                    result(new iTaskResult),
                                                    tradeLink(new iTradesData),
                                                    depthLink(new QHash<uint,iDepth>){}
@@ -57,7 +56,7 @@ void WsTask::run(){
         updTmpTable(listDepth);
         reRange();
     }
-    std::cout << "stepNum: " << stepNum << std::endl;
+    std::cout << "stepNum: " << step->PeriodStart << std::endl;
 
     foreach(auto rng, rangeUser){
         if(rng.response)
@@ -67,7 +66,7 @@ void WsTask::run(){
     }
 
     emit response(step, result);
-    std::cout << "stepNum: " << stepNum << std::endl;
+    std::cout << "stepNum: " << step->PeriodStart << std::endl;
 }
 
 void WsTask::getLastDep(uint pos){
