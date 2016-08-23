@@ -86,6 +86,8 @@ void WsWorker::processTextMessage(QString message){
 
         user[idusersocs].taskLast = 0;
         user[idusersocs].tasks = 0;
+        user[idusersocs].task.clear();
+        user[idusersocs].result.clear();
 
         uint timeRange  = (user[idusersocs].timeOut - user[idusersocs].timeIn)/user[idusersocs].timeRange;
         uint rateRange  = (user[idusersocs].rateOut - user[idusersocs].rateIn)/user[idusersocs].rateRange;
