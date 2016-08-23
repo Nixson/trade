@@ -227,6 +227,11 @@
 					$("#proc").val(data.perc);
 					setTimeout(function(){self.work();},3000);
 				}
+				else {
+					$("#findRange").val(0);
+					$("#rate").val(0);
+					$("#proc").val(0);
+				}
 
 				/*try {
 					var sj = JSON.parse(msg.data);
