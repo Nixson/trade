@@ -263,29 +263,37 @@
 				var splData = infodata.split('::');
 				var infodatas = splData[1].split(',');
 				last = parseFloat(infodatas[infodatas.length - 1]);
+				var dataTmp = [];
 				for(var el in sj.tmp){
 					if(el > 30)
 						break;
+					dataTmp.push(sj.tmp[el]);
+				}
+				for(var el in dataTmp){
 					var date = new Date(sj.tmp[el].dtime*1000);
 					var spl = sj.tmp[el].data.split('::');
 					var prices = spl[1].split(',');
 					for(var num in prices){
-						dr.push('<tr><td>'+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds()+'</td>');
-						dr.push('<td>'+spl[0]+'</td>');
+						var str = '<tr><td>'+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds()+'</td>';
+						str+='<td>'+spl[0]+'</td>';
 						var price = parseFloat(prices[num]);
 						if(price > last){
-							dr.push('<td>'+price+' &#8593;</td>');
+							str+='<td>'+price+' &#8593;</td>';
 						}
 						else if(price < last){
-							dr.push('<td>'+price+' &#8595;</td>');
+							str+='<td>'+price+' &#8595;</td>';
 						}
 						else
-							dr.push('<td>'+price+' =</td></tr>');
+							str+='<td>'+price+' =</td></tr>';
+						dr.push(str);
 						last = price;
 					}
-
 				}
-				$("#viewInfo table").html(dr.join(""));
+				var List = '';
+				for(var nm in dr){
+					List = dr[nm]+List;
+				}
+				$("#viewInfo table").html(List);
 				for(var str in JR){
 					var date = new Date(JR[str].dtime*1000);
 					var bLine = JR[str].price.split(',');
