@@ -124,8 +124,9 @@ void WsWorker::poolIn(iTask task, uint numPos){
     QThreadPool::globalInstance()->start(wtask);
 }
 void WsWorker::response(iTask *step, iTaskResult *result){
-    user[step->iduser].task.append(step);
-    user[step->iduser].result.append(result);
+    var key = user[step->iduser].taskLast;
+    user[step->iduser].task.insert(key,step);
+    user[step->iduser].result.insert(key,result);
     --user[step->iduser].taskLast;
     std::cout << "\r " << user[step->iduser].taskLast;
     if((uint)user[step->iduser].task.length() == user[step->iduser].tasks){
@@ -148,6 +149,7 @@ void WsWorker::response(iTask *step, iTaskResult *result){
             if(good < est){
                 good = est;
                 goodStep = user[step->iduser].task[key];
+                std::cout << "result: " << key << std::endl;
                 if(good > 1.2)
                     find = true;
             }
