@@ -251,10 +251,10 @@
 				var JR = sj.rate;
 				var lastPrice = 0;
 				var cnt = 0;
+				var strView = '';
 				for(var str in JR){
 					var date = new Date(JR[str].dtime*1000);
 					var bLine = JR[str].price.split(',');
-					var strView = '';
 					for(var lNum in bLine){
 						var pos = "";
 						if(bLine[lNum]!=''){
@@ -297,8 +297,8 @@
 						strView +='</td></tr>';
 						cnt++;
 					}
-					$("#view table").html(strView+$("#view table").html());
 				}
+				$("#view table").html(strView+$("#view table").html());
 
 				//tab
 				
