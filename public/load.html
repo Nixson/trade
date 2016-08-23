@@ -259,8 +259,9 @@
 				var sjTmpLen = sj.tmp.length;
 				if(sjTmpLen > 32)
 					sjTmpLen = 32;
-				var info = sj.tmp[sjTmpLen].data.split('::')[1].split(',');
-				last = parseFloat(info[info.length - 1]);
+				var infodata = sj.tmp[sjTmpLen-1].data.split('::');
+				var infodatas = infodata[1].split(',');
+				last = parseFloat(infodatas[infodatas.length - 1]);
 				for(var el in sj.tmp){
 					if(el > 30)
 						break;
