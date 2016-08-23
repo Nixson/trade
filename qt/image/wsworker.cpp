@@ -154,6 +154,7 @@ void WsWorker::response(iTask *step, iTaskResult *result){
             //std::cout << "result: " << info->good << ":\t" << info->bad << ":\t" << est << std::endl;
         }
         std::cout << "best: " << good << std::endl;
+        std::cout << "best: " << goodStep->PeriodStart << ":" << goodStep->rate << std::endl;
         std::cout << "bed: " << bad << std::endl;
         if(find){
             QDateTime current = QDateTime::currentDateTime();
