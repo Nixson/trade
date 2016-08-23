@@ -241,8 +241,8 @@
 				}*/
 			},
 			onmessage: function(msg){
-				console.log("socket onmessage");
 				var sj = JSON.parse(msg.data);
+				console.log("socket onmessage",sj);
 				var JR = sj.rate;
 				var lastPrice = 0;
 				var cnt = 0;
