@@ -130,8 +130,9 @@ void WsWorker::poolIn(iTask task){
 void WsWorker::response(iTask *step, iTaskResult *result){
     int key = user[step->iduser].tasks - user[step->iduser].taskLast;
     --user[step->iduser].taskLast;
-    user[step->iduser].task[key] = step;
-    user[step->iduser].result[key] = result;
+    user[step->iduser].task.append(step);
+    user[step->iduser].result.append(result);
+    std::cout << key << std::endl;
     if((uint)user[step->iduser].task.length() == user[step->iduser].tasks){
         QDateTime current = QDateTime::currentDateTime();
         std::cout << "\n responseOut" << std::endl;
