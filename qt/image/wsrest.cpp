@@ -377,7 +377,7 @@ void WSrest::print(int id, QVector <strTable> &sdata, ufBlock &rest, bool view){
             foreach (float price, val.price) {
                 priceStr << QString::number(price);
             }
-            tmp << "{\""+QString::number(tmpUserState.key())+"\":\""+QString::number(val.range)+"::"+priceStr.join(",")+"\"}";
+            tmp << "{\"dtime\":\""+QString::number(tmpUserState.key())+"\", \"data\":\""+QString::number(val.range)+"::"+priceStr.join(",")+"\"}";
         }
         resp = "{\"rate\":["+stl.join(",")+"], \"tab\": ["+sts.join(",")+"],\"last\":{\"range\":"+QString::number(rate[id].lastRange)+",\"asc\": "+sta+" }, \"rtables\": ["+stu.join(",")+"],\"tmp\": ["+tmp.join(",")+"] }";
         pClient->sendTextMessage(resp);
