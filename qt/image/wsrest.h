@@ -38,7 +38,7 @@ private:
     QHash <int, QVector< strResponse > > rangeUser;
     int                         last;
     uint                        lastUpd;
-    QHash <int, ufBlock>         tmpUser;
+    QMap <int, ufBlock>         tmpUser;
 
     void                updTmpTable(int id, QVector <tmpTable> &tt,  ufBlock &rest);
     QVector<strTable>   reRange(int id);

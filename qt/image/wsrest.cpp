@@ -337,6 +337,7 @@ void WSrest::print(int id, QVector <strTable> &sdata, ufBlock &rest, bool view){
         QStringList stl;
         QStringList sts;
         QStringList stu;
+        QStringList tmp;
         QString sta = "{}";
         //bool isPrice = false;
         if(view){
@@ -370,7 +371,15 @@ void WSrest::print(int id, QVector <strTable> &sdata, ufBlock &rest, bool view){
             }
         }
         QString resp;
-        resp = "{\"rate\":["+stl.join(",")+"], \"tab\": ["+sts.join(",")+"],\"last\":{\"range\":"+QString::number(rate[id].lastRange)+",\"asc\": "+sta+" }, \"rtables\": ["+stu.join(",")+"] }";
+        for(auto tmpUserState = tmpUser.cbegin(); tmpUserState!=tmpUser.cend(); ++tmpUserState){
+            ufBlock val = tmpUserState.value();
+            QStringList priceStr;
+            foreach (float price, val.price) {
+                priceStr << QString::number(price);
+            }
+            tmp << "{\""+tmpUserState.key()+"\":\""+QString::number(val.range)+"::"+priceStr.join(",")+"\"}";
+        }
+        resp = "{\"rate\":["+stl.join(",")+"], \"tab\": ["+sts.join(",")+"],\"last\":{\"range\":"+QString::number(rate[id].lastRange)+",\"asc\": "+sta+" }, \"rtables\": ["+stu.join(",")+"],\"tmp\": ["+tmp.join(",")+"] }";
         pClient->sendTextMessage(resp);
     }
 }
