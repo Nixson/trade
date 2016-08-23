@@ -269,6 +269,7 @@
 						break;
 					dataTmp.push(sj.tmp[el]);
 				}
+				dataTmp = dataTmp.reverse();
 				for(var el in dataTmp){
 					var date = new Date(sj.tmp[el].dtime*1000);
 					var spl = sj.tmp[el].data.split('::');
