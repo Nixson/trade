@@ -260,7 +260,7 @@
 				if(sjTmpLen > 32)
 					sjTmpLen = 32;
 				var infodata = sj.tmp[sjTmpLen-1].data;
-				console.log(infodata);
+				console.log(sj.tmp[sjTmpLen-1]);
 				var splData = infodata.split('::');
 				var infodatas = splData[1].split(',');
 				last = parseFloat(infodatas[infodatas.length - 1]);
