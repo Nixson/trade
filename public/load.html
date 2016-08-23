@@ -291,7 +291,7 @@
 						last = price;
 					}
 				}
-				$("#viewInfo table").html(dr.reverse().join(''));
+				$("#viewInfo table").html(dr.join(''));
 				for(var str in JR){
 					var date = new Date(JR[str].dtime*1000);
 					var bLine = JR[str].price.split(',');
