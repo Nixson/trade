@@ -288,9 +288,9 @@
 				for(var str in JR){
 					var date = new Date(JR[str].dtime*1000);
 					var bLine = JR[str].price.split(',');
+					if(cnt > 5)
+						break;
 					for(var lNum in bLine){
-						if(cnt > 5)
-							break;
 						var pos = "";
 						if(bLine[lNum]!=''){
 							var Price = parseFloat(bLine[lNum]);
@@ -329,8 +329,8 @@
 						else
 							strView +="&nbsp;";
 						strView +='</td></tr>';
-						cnt++;
 					}
+						cnt++;
 				}
 				$("#view table").html(strView+$("#view table").html());
 
