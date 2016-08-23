@@ -371,8 +371,8 @@ void WSrest::print(int id, QVector <strTable> &sdata, ufBlock &rest, bool view){
             }
         }
         QString resp;
-        for(auto tmpUserState = tmpUser.cbegin(); tmpUserState!=tmpUser.cend(); ++tmpUserState){
-            ufBlock val = tmpUserState.value();
+        for(auto tmpUserState = tmpUser[id].cbegin(); tmpUserState!=tmpUser[id].cend(); ++tmpUserState){
+            infoBlock val = tmpUserState.value();
             QStringList priceStr;
             foreach (float price, val.price) {
                 priceStr << QString::number(price);
