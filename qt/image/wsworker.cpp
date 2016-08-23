@@ -124,7 +124,7 @@ void WsWorker::poolIn(iTask task, uint numPos){
     QThreadPool::globalInstance()->start(wtask);
 }
 void WsWorker::response(iTask *step, iTaskResult *result){
-    var key = user[step->iduser].taskLast;
+    int key = user[step->iduser].taskLast;
     user[step->iduser].task.insert(key,step);
     user[step->iduser].result.insert(key,result);
     --user[step->iduser].taskLast;
