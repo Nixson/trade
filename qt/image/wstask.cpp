@@ -56,7 +56,6 @@ void WsTask::run(){
         updTmpTable(listDepth);
         reRange();
     }
-    std::cout << "stepNum: " << step->PeriodStart << std::endl;
 
     foreach(auto rng, rangeUser){
         if(rng.response)
@@ -66,7 +65,6 @@ void WsTask::run(){
     }
 
     emit response(step, result);
-    std::cout << "stepNum: " << step->PeriodStart << std::endl;
 }
 
 void WsTask::getLastDep(uint pos){
