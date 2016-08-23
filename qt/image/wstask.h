@@ -9,7 +9,7 @@ class WsTask : public QObject, public QRunnable
 {
     Q_OBJECT
 public:
-    explicit WsTask(iTask stepTask, QObject *parent = 0);
+    explicit WsTask(iTask stepTask, uint step, QObject *parent = 0);
     static bool Asort(iPair a, iPair b);
     static bool Dsort(iPair a, iPair b);
 
@@ -22,6 +22,7 @@ public slots:
 private:
     umBlock             tmpUser;
     iTask               stepOb, *step;
+    uint                stepNum;
     iRate               rate;
     float               stepRate;
     iTaskResult         *result;

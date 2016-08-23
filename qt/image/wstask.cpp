@@ -3,8 +3,9 @@
 #include <iostream>
 #include <QDateTime>
 
-WsTask::WsTask(iTask stepTask, QObject *parent) : QObject(parent),
+WsTask::WsTask(iTask stepTask, uint step, QObject *parent) : QObject(parent),
                                                    stepOb(stepTask),
+                                                   stepNum(step),
                                                    result(new iTaskResult),
                                                    tradeLink(new iTradesData),
                                                    depthLink(new QHash<uint,iDepth>){}
@@ -65,6 +66,7 @@ void WsTask::run(){
     }
 
     emit response(step, result);
+    std::cout << "\r stepNum: " << stepNum;
 }
 
 void WsTask::getLastDep(uint pos){
