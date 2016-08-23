@@ -108,7 +108,7 @@ void WsWorker::processTextMessage(QString message){
                     task.PeriodStop = currentInt;
                     task.rate = (float)rate;
                     task.perc = price;
-                    poolIn(task,user[idusersocs].tasks);
+                    poolIn(task);
                     ++user[idusersocs].tasks;
                     ++user[idusersocs].taskLast;
                 }
@@ -118,16 +118,16 @@ void WsWorker::processTextMessage(QString message){
     }
 
 }
-void WsWorker::poolIn(iTask task, uint numPos){
-    WsTask *wtask = new WsTask(task,numPos);
+void WsWorker::poolIn(iTask task){
+    WsTask *wtask = new WsTask(task);
     connect(wtask,&WsTask::response,this,&WsWorker::response);
     QThreadPool::globalInstance()->start(wtask);
 }
 void WsWorker::response(iTask *step, iTaskResult *result){
     int key = user[step->iduser].taskLast;
+    --user[step->iduser].taskLast;
     user[step->iduser].task.insert(key,step);
     user[step->iduser].result.insert(key,result);
-    --user[step->iduser].taskLast;
     std::cout << "\r " << user[step->iduser].taskLast;
     if((uint)user[step->iduser].task.length() == user[step->iduser].tasks){
         std::cout << "\n responseOut" << std::endl;
