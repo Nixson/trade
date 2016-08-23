@@ -286,6 +286,8 @@
 					var date = new Date(JR[str].dtime*1000);
 					var bLine = JR[str].price.split(',');
 					for(var lNum in bLine){
+						if(cnt > 5)
+							break;
 						var pos = "";
 						if(bLine[lNum]!=''){
 							var Price = parseFloat(bLine[lNum]);
@@ -298,7 +300,6 @@
 							lastPrice = Price;
 						}
 						else 
-							continue;
 						strView +='<tr><td>';
 						strView+= date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
 						strView +='</td><td>';
