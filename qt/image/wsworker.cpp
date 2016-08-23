@@ -116,6 +116,8 @@ void WsWorker::processTextMessage(QString message){
                 }
             }
         }
+        user[idusersocs].task.reserve(user[idusersocs].tasks);
+        user[idusersocs].result.reserve(user[idusersocs].tasks);
         std::cout << "QThreadPool start: " << user[idusersocs].tasks << std::endl;
     }
 
