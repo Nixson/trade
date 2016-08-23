@@ -264,13 +264,14 @@
 				var splData = infodata.split('::');
 				var infodatas = splData[1].split(',');
 				last = parseFloat(infodatas[infodatas.length - 1]);
+				var dataTmpR = [];
 				var dataTmp = [];
 				for(var el in sj.tmp){
 					if(el > 30)
 						break;
-					dataTmp.push(sj.tmp[el]);
+					dataTmpR.push(sj.tmp[el]);
 				}
-				dataTmp = dataTmp.reverse();
+				dataTmp = dataTmpR.reverse();
 				for(var el in dataTmp){
 					var date = new Date(sj.tmp[el].dtime*1000);
 					var spl = sj.tmp[el].data.split('::');
@@ -291,6 +292,7 @@
 						last = price;
 					}
 				}
+				console.log(dataTmp,dr);
 				$("#viewInfo table").html(dr.join(''));
 				for(var str in JR){
 					var date = new Date(JR[str].dtime*1000);
