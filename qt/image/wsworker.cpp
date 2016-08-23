@@ -126,16 +126,20 @@ void WsWorker::poolIn(iTask task){
     QThreadPool::globalInstance()->start(wtask);
 }
 void WsWorker::response(iTask *step, iTaskResult *result){
-    int key = user[step->iduser].taskLast;
+    int key = user[step->iduser].tasks - user[step->iduser].taskLast;
     --user[step->iduser].taskLast;
-    user[step->iduser].task.append(step);
-    user[step->iduser].result.append(result);
+    user[step->iduser].task[key] = step;
+    user[step->iduser].result[key] = result;
     std::cout << key << std::endl;
     if((uint)user[step->iduser].task.length() == user[step->iduser].tasks){
+        QDateTime current = QDateTime::currentDateTime();
         std::cout << "\n responseOut" << std::endl;
         float bad = 0.0;
         float good = 0.0;
         iTask *goodStep = new iTask();
+        goodStep->PeriodStart =current.toTime_t();
+        goodStep->perc = 0;
+        goodStep->rate = 0;
         bool find = false;
 
         for (auto key = 0; key < user[step->iduser].result.length(); ++key) {
@@ -162,7 +166,6 @@ void WsWorker::response(iTask *step, iTaskResult *result){
         std::cout << "best: " << goodStep->PeriodStart << ":" << goodStep->rate << std::endl;
         std::cout << "bed: " << bad << std::endl;
         if(find){
-            QDateTime current = QDateTime::currentDateTime();
             uint currentInt = current.toTime_t() - goodStep->PeriodStart;
             QString msg = "{\"dtime\":"+QString::number((int)currentInt)+",\"perc\":"+QString::number((int)goodStep->perc)+",\"rate\":"+QString::number((int)goodStep->rate)+"}";
             if(am_clients.contains(step->iduser))
