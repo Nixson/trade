@@ -148,10 +148,11 @@ void WsWorker::response(iTask *step, iTaskResult *result){
             }
             if(good < est){
                 good = est;
-                goodStep = user[step->iduser].task[key];
-                std::cout << "result: " << key << std::endl;
-                if(good > 1.2)
+                if(good > 1.2){
                     find = true;
+                    std::cout << "result: " << key << std::endl;
+                    goodStep = user[step->iduser].task[key];
+                }
             }
             //std::cout << "result: " << info->good << ":\t" << info->bad << ":\t" << est << std::endl;
         }
