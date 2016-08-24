@@ -130,7 +130,7 @@ void WSrest::updTmpTable(int id, QVector <tmpTable> &tt,  ufBlock &rest){
                     if(info.range >= lastAsc[id].min && info.range <= lastAsc[id].max){
 
                         strResponse rsp;
-                        rsp.dtime = cTime;
+                        rsp.dtime = info.dtime;
                         rsp.price = price;
                         rsp.range = info.range;
                         if(lastAsc[id].pos==pos){
