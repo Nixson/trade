@@ -254,13 +254,14 @@
 				var lastPrice = 0;
 				var cnt = 0;
 				var strView = '';
-				sj.tmp = sj.tmp.sort(function(a,b){return -1 * (a.dtime - b.dtime);});
+				console.log(sj.tmp);
+				var sjTmp = sj.tmp.sort(function(a,b){return -1 * (a.dtime - b.dtime);});
 				var dr = [];
 				var last = 0;
-				var sjTmpLen = sj.tmp.length;
+				var sjTmpLen = sjTmp.length;
 				if(sjTmpLen > 32)
 					sjTmpLen = 32;
-				var infodata = sj.tmp[sjTmpLen-1].data;
+				var infodata = sjTmp[sjTmpLen-1].data;
 				var splData = infodata.split('::');
 				var infodatas = splData[1].split(',');
 				last = parseFloat(infodatas[infodatas.length - 1]);
