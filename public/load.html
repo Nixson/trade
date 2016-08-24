@@ -296,8 +296,8 @@
 						dr.push(str);
 				}
 				$("#viewInfo table").html(dr.join(''));
-				console.log(JR);
 				JR = JR.sort(function(a,b) { return -1 * (a.dtime - b.dtime);})
+				console.log(JR[0],JR[JR.length-1]);
 				for(var str in JR){
 					var date = new Date(JR[str].dtime*1000);
 					var bLine = JR[str].price.split(',');
