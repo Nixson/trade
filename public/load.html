@@ -299,7 +299,7 @@
 				for(var str in JR){
 					var date = new Date(JR[str].dtime*1000);
 					var bLine = JR[str].price.split(',');
-					if(cnt > 5)
+					if(cnt > 0)
 						break;
 					for(var lNum in bLine){
 						var pos = "";
@@ -313,7 +313,6 @@
 								pos = "=";
 							lastPrice = Price;
 						}
-						else 
 						strView +='<tr><td>';
 						strView+= date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
 						strView +='</td><td>';
