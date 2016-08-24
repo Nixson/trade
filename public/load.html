@@ -311,7 +311,7 @@
 						strView +='</td><td>';
 						strView += JR[0].price;
 						strView +='</td><td></tr>';
-
+					$("#view table").html(strView);
 				}
 				/*console.log(JR[0],JR[JR.length-1]);
 				for(var str in JR){
@@ -360,7 +360,6 @@
 					}
 						cnt++;
 				}*/
-				$("#view table").html(strView+$("#view table").html());
 
 				//tab
 				
