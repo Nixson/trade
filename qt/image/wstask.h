@@ -44,7 +44,6 @@ private:
     void getRange(ufBlock &listDepth);
     void getRange(uint per, umBlock &listDepth);
     void updTmpTable(ufBlock &rest);
-    void updTmpTable(umBlock &rest);
     void subRange();
     void reRange();
 

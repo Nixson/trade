@@ -257,16 +257,10 @@ void WsTask::getRange(uint per, umBlock &listDepth){
 }
 
 
+
+
+
 void WsTask::updTmpTable(ufBlock &rest){
-    umBlock subrest;
-    for(auto info = rest.cbegin(); info!=rest.cend();++info)
-        subrest[info.key()] = info.value();
-    updTmpTable(subrest);
-}
-
-
-
-void WsTask::updTmpTable(umBlock &rest){
     QDateTime current = QDateTime::currentDateTime();
     uint cTime = current.toTime_t();
 
