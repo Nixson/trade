@@ -296,6 +296,7 @@
 						dr.push(str);
 				}
 				$("#viewInfo table").html(dr.join(''));
+				console.log(JR);
 				for(var str in JR){
 					var date = new Date(JR[str].dtime*1000);
 					var bLine = JR[str].price.split(',');
