@@ -297,6 +297,7 @@
 				}
 				$("#viewInfo table").html(dr.join(''));
 				JR = JR.sort(function(a,b) { return -1 * (a.dtime - b.dtime);});
+				if(JR.length > 0 && typeof JR[0].dtime!='undefined'){
 				var date = new Date(JR[0].dtime*1000);
 						strView +='<tr><td>';
 						strView+= date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
@@ -310,6 +311,7 @@
 						strView += JR[0].price;
 						strView +='</td><td></tr>';
 
+				}
 				/*console.log(JR[0],JR[JR.length-1]);
 				for(var str in JR){
 					var date = new Date(JR[str].dtime*1000);
