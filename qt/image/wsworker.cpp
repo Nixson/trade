@@ -169,11 +169,13 @@ void WsWorker::response(iTask *step, iTaskResult *result){
         std::cout << "bed: " << bad << std::endl;
         if(find){
             uint currentInt = current.toTime_t() - goodStep->PeriodStart;
-            QString msg = "{\"dtime\":"+QString::number((int)currentInt)+",\"perc\":"+QString::number((int)goodStep->perc)+",\"rate\":"+QString::number((int)goodStep->rate)+"}";
+            QString msg = "{\"dtime\":"+QString::number((int)currentInt)+",\"perc\":"
+                    +QString::number((int)goodStep->perc)+",\"rate\":"+QString::number((int)goodStep->rate)
+                    +",\"good\":\""+QString::number(good)+"\",\"bad\":\""+QString::number(bad)+"\"}";
             if(am_clients.contains(step->iduser))
                 am_clients[step->iduser]->sendTextMessage(msg);
         }else {
-            QString msg = "{\"dtime\":0,\"perc\":0,\"rate\":0}";
+            QString msg = "{\"dtime\":0,\"perc\":0,\"rate\":0,\"good\":\""+QString::number(good)+"\",\"bad\":\""+QString::number(bad)+"\"}";
             if(am_clients.contains(step->iduser))
                 am_clients[step->iduser]->sendTextMessage(msg);
         }
