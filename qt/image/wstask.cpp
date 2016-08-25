@@ -303,7 +303,7 @@ void WsTask::updTmpTable(ufBlock &rest){
                 if(lastAsc.contains(0)){
                     if(info.range >= lastAsc[0].min && info.range <= lastAsc[0].max){
                         strResponse rsp;
-                        rsp.dtime = cTime;
+                        rsp.dtime = info.dtime;
                         rsp.price = price;
                         rsp.range = info.range;
                         if(lastAsc[0].pos==pos){
