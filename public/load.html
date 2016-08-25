@@ -479,7 +479,7 @@
 					this.nextRange = 600;
 					this.timer = true;
 					this.onload = true;
-					this.timer = setTimeout(function(){ self.reTimer = true; this.nextTime(); },2000);
+					this.timer = setTimeout(function(){ self.reTimer = true; self.nextTime(); },2000);
 				}
 				else {
 					setTimeout(function(){self.workRange();});
