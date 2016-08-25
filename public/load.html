@@ -70,11 +70,17 @@
 		</form>
 		<br /><br />
 			<div class="row">
-				<div class="col-xs-6">
+				<div class="col-xs-3">
 					<div id="dtime"></div>
 				</div>
-				<div class="col-xs-6">
+				<div class="col-xs-3">
 					<div id="dInterval"></div>
+				</div>
+				<div class="col-xs-3">
+					<div id="good"></div>
+				</div>
+				<div class="col-xs-3">
+					<div id="bad"></div>
 				</div>
 			</div>
 
@@ -216,6 +222,8 @@
 				var stimer = Date.now();
 				var data = JSON.parse(msg.data);
 				$("#dtime").text( ((stimer - this.stimer)/1000 ).toFixed(2) + "сек." );
+				$("#good").text(data.good);
+				$("#bad").text(data.bad);
 
 				this.close();
 				this.range.close();
