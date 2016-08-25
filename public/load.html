@@ -474,13 +474,12 @@
 				list += ( parseInt($('#w-procSliderResultOut').text()) || 0 ).toString() + ';';
 				list += ( parseInt($('#w-proc').val()) || 0 ).toString();
 				if(this.range != null){
-					this.reTimer = true;
+					this.reTimer = false;
 					this.range.send(list);
 					this.nextRange = 600;
 					this.timer = true;
 					this.onload = true;
-					this.nextTime();
-					//this.timer = setTimeout(function(){	self.workRange();},600000);
+					this.timer = setTimeout(function(){ self.reTimer = true; this.nextTime(); },2000);
 				}
 				else {
 					setTimeout(function(){self.workRange();});
@@ -492,6 +491,7 @@
 				var self = this;
 				if(!self.reTimer)
 					return;
+				console.log("nextTime");
 				if(this.onload){
 					$("#dtime").text("Loading");
 				}
