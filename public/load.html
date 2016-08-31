@@ -536,6 +536,9 @@
 				var viewRange = $("#findRange").val();
 				var rate = $("#rate").val();
 				var proc = $("#proc").val();
+				var reverse = $("#reverse").prop("checked");
+				console.log(reverse);
+				return;
 				$("#view").html('<table class="table"></table>');
 				if(this.sock != null){
 					console.log("send",pair+";"+findRange+";"+ viewRange +";"+ rate+";"+proc);
