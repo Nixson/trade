@@ -82,6 +82,7 @@ void WsWorker::processTextMessage(QString message){
             user[idusersocs].priceOut   = rsp[7].toFloat();
             user[idusersocs].priceRange = rsp[8].toInt();
             user[idusersocs].rangeLabel = rsp[9].toFloat();
+            std::cout << rsp[9].toStdString() << ": " << rsp[9].toFloat() << std::endl;
 
         }
         catch(...){}
