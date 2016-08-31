@@ -21,6 +21,7 @@ typedef struct iRate_str {
     float perc;
     float rateFloat;
     float lastPrice;
+    float lastPriceUser;
     float lastRange;
     uint lastPeriod;
     float min;
@@ -84,6 +85,8 @@ typedef struct strResponse_str {
     float price;
     float range;
     bool response;
+    float diffR;
+    float diffM;
 } strResponse;
 
 

@@ -138,6 +138,12 @@ void WSrest::updTmpTable(int id, QVector <tmpTable> &tt,  ufBlock &rest){
                         }
                         else
                             rsp.response = false;
+                        if(rangeUser[id].size()==0){
+                            rsp.diffR = std::abs(rsp.price - rate[id].lastPrice);
+                        }
+                        else
+                            rsp.diffR = std::abs(rangeUser[id][rangeUser[id].size()-1] - rate[id].lastPrice);
+                        rsp.diffM = std::abs(rsp.price - rate[id].lastPrice);
                             rangeUser[id].append(rsp);
                         lastAsc.remove(id);
                     }
@@ -367,7 +373,13 @@ void WSrest::print(int id, QVector <strTable> &sdata, ufBlock &rest, bool view){
         }
         if(rangeUser.contains(id)){
             foreach (strResponse inf, rangeUser[id]) {
-                stu << "{\"dtime\":"+QString::number(inf.dtime)+",\"price\":"+QString::number(inf.price)+",\"range\":"+QString::number(inf.range)+",\"response\":"+QString::number(inf.response)+"}";
+                stu << "{\"dtime\":"+QString::number(inf.dtime)
+                       +",\"price\":"+QString::number(inf.price)
+                       +",\"range\":"+QString::number(inf.range)
+                       +",\"response\":"+QString::number(inf.response)
+                       +",\"diffR\":"+QString::number(inf.diffR)
+                       +",\"diffM\":"+QString::number(inf.diffM)
+                       +"}";
             }
         }
         QString resp;
