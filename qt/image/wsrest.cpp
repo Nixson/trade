@@ -142,7 +142,7 @@ void WSrest::updTmpTable(int id, QVector <tmpTable> &tt,  ufBlock &rest){
                             rsp.diffR = std::abs(rsp.price - rate[id].lastPrice);
                         }
                         else
-                            rsp.diffR = std::abs(rangeUser[id][rangeUser[id].size()-1] - rate[id].lastPrice);
+                            rsp.diffR = std::abs(rangeUser[id][rangeUser[id].size()-1].price - rate[id].lastPrice);
                         rsp.diffM = std::abs(rsp.price - rate[id].lastPrice);
                             rangeUser[id].append(rsp);
                         lastAsc.remove(id);
