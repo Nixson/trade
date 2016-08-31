@@ -158,10 +158,20 @@ void WsWorker::response(iTask *step, iTaskResult *result){
             float est = 0.0;
             if(info->bad > 0){
                 est = (float)info->good/info->bad;
-                if(bad==0.0)
+                if(bad==0.0){
                     bad = est;
-                else if(bad > est)
+                    if(user[step->iduser].rangeLabel < 1/bad){
+                        findReverse = true;
+                        badStep = user[step->iduser].task[key];
+                    }
+                }
+                else if(bad > est) {
                     bad = est;
+                    if(user[step->iduser].rangeLabel < 1/bad){
+                        findReverse = true;
+                        badStep = user[step->iduser].task[key];
+                    }
+                }
             }
             if(good < est){
                 good = est;
@@ -181,9 +191,13 @@ void WsWorker::response(iTask *step, iTaskResult *result){
             //std::cout << "result: " << info->good << ":\t" << info->bad << ":\t" << est << std::endl;
         }
         std::cout << "best: " << good << std::endl;
-        std::cout << "best: " << goodStep->PeriodStart << ":" << goodStep->rate << std::endl;
-        std::cout << "bed: " << bad << std::endl;
+        std::cout << "bad: " << bad << std::endl;
         if(find || findReverse){
+            if(find)
+                std::cout << "best: find" << std::endl;
+            if(findReverse)
+                std::cout << "bad: find" << std::endl;
+
             if(find && findReverse){
                 if(good > 1/bad)
                     findReverse = false;
