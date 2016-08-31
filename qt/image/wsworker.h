@@ -18,6 +18,7 @@ typedef struct iWsUser_str {
     uint rateRange;
     float priceIn;
     float priceOut;
+    float rangeLabel;
     uint priceRange;
     uint tasks;
     uint taskLast;

@@ -34,6 +34,7 @@ void WsWorker::onNewConnection(){
     client.priceIn = 10.0;
     client.priceOut = 20.0;
     client.priceRange = 2;
+    client.rangeLabel = 1.5;
     client.tasks = 0;
     user.insert(last,client);
     ++last;
@@ -80,6 +81,7 @@ void WsWorker::processTextMessage(QString message){
             user[idusersocs].priceIn    = rsp[6].toFloat();
             user[idusersocs].priceOut   = rsp[7].toFloat();
             user[idusersocs].priceRange = rsp[8].toInt();
+            user[idusersocs].rangeLabel = rsp[9].toFloat();
 
         }
         catch(...){}
@@ -142,6 +144,12 @@ void WsWorker::response(iTask *step, iTaskResult *result){
         goodStep->PeriodStart =current.toTime_t();
         goodStep->perc = 0;
         goodStep->rate = 0;
+
+        iTask *badStep = new iTask();
+        badStep->PeriodStart =current.toTime_t();
+        badStep->perc = 0;
+        badStep->rate = 0;
+
         bool find = false;
 
         for (auto key = 0; key < user[step->iduser].result.length(); ++key) {
@@ -156,10 +164,16 @@ void WsWorker::response(iTask *step, iTaskResult *result){
             }
             if(good < est){
                 good = est;
-                if(good > 1.2){
+                if(good >= user[step->iduser].rangeLabel){
                     find = true;
                     std::cout << "result: " << key << std::endl;
                     goodStep = user[step->iduser].task[key];
+                }
+            }
+            if(bad > est && est > 0.01) {
+                bad = est;
+                if(user[step->iduser].rangeLabel < 1/bad){
+                    badStep = user[step->iduser].task[key];
                 }
             }
             //std::cout << "result: " << info->good << ":\t" << info->bad << ":\t" << est << std::endl;

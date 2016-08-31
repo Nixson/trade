@@ -34,6 +34,7 @@ void WSrest::onNewConnection(){
     cl.min = 0.0;
     cl.max = 0.0;
     cl.lastRange = 0.0;
+    cl.reverse = false;
     cl.lastPeriod =current.toTime_t();
     rate.insert(last,cl);
     ++last;
@@ -134,10 +135,17 @@ void WSrest::updTmpTable(int id, QVector <tmpTable> &tt,  ufBlock &rest){
                         rsp.price = price;
                         rsp.range = info.range;
                         if(lastAsc[id].pos==pos){
-                            rsp.response = true;
+                            if(rate[id].reverse)
+                                rsp.response = false;
+                            else
+                                rsp.response = true;
                         }
-                        else
-                            rsp.response = false;
+                        else {
+                            if(rate[id].reverse)
+                                rsp.response = true;
+                            else
+                                rsp.response = false;
+                        }
                         if(rangeUser[id].size()==0){
                             rsp.diffR = std::abs(rsp.price - rate[id].lastPrice);
                         }
@@ -418,6 +426,8 @@ void WSrest::processTextMessage(QString message)
             rate[idusersocs].view = rsp[2].toInt();
             rate[idusersocs].rate = rsp[3].toInt();
             rate[idusersocs].perc = rsp[4].toFloat();
+            if(rsp[5]=="0")
+                rate[idusersocs].reverse = true;
         }
         catch(...){}
         rate[idusersocs].rateFloat = (float)rate[idusersocs].rate;

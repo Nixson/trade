@@ -26,6 +26,7 @@ typedef struct iRate_str {
     uint lastPeriod;
     float min;
     float max;
+    bool  reverse;
 } iRate;
 
 typedef struct iTask_struct {
