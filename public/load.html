@@ -496,6 +496,7 @@
 				list += ( parseInt($('#w-procSliderResultOut').text()) || 0 ).toString() + ';';
 				list += ( parseInt($('#w-proc').val()) || 0 ).toString()+';';
 				list += ( parseFloat($('#w-label').val()) || 1.3 ).toString();
+				console.log(list);
 				if(this.range != null){
 					this.reTimer = false;
 					this.range.send(list);
