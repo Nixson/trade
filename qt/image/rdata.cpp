@@ -38,7 +38,7 @@ void Rdata::get(uint date, iDepth &to){
     }
     qm["depth"]->unlock();
 }
-void Rdata::get(uint datein, uint dateout, QHash<uint, iDepth> &to){
+void Rdata::get(uint datein, uint dateout, QMap<uint, iDepth> &to){
     qm["depth"]->lockForRead();
     uint start, stop;
     if(datein > dateout){

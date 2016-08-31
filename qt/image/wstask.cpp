@@ -7,7 +7,7 @@ WsTask::WsTask(iTask stepTask, QObject *parent) : QObject(parent),
                                                    stepOb(stepTask),
                                                    result(new iTaskResult),
                                                    tradeLink(new iTradesData),
-                                                   depthLink(new QHash<uint,iDepth>){}
+                                                   depthLink(new QMap<uint,iDepth>){}
 
 void WsTask::run(){
     step = &stepOb;

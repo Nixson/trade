@@ -42,7 +42,7 @@ public slots:
 private:
     NetRequest *req;
     QTimer *timer, *timerMin;
-    QHash <uint, iDepth> dep;
+    QMap <uint, iDepth> dep;
     int pNum;
     void print(QString, iPairs);
     void loadOb();

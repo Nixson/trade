@@ -139,6 +139,17 @@
 		<div id="viewInfo"><table class="table"></table></div>
 	</div>
 	<div class="col-xs-5">
+		<h3>Счет:</h3>
+		<table class="table">
+			<tr>
+				<td>Биткоинов:</td>
+				<td id="summCount"></td>
+			</tr>
+			<tr>
+				<td>Денег:</td>
+				<td id="summPrice"></td>
+			</tr>
+		</table>
 		<div id="rtable"></div>
 	</div>
 </div>
@@ -200,6 +211,8 @@
 	});
 	var wsock = function(){
 		socket = {
+			lastCount: 0,
+			lastPrice: 0.0,
 			sock: null,
 			range: null,
 			build: function(){
@@ -270,6 +283,10 @@
 			},
 			onmessage: function(msg){
 				var sj = JSON.parse(msg.data);
+				this.lastCount = sj.summ.count;
+				this.lastPrice = sj.summ.price;
+				$("#summCount").text(this.lastCount);
+				$("#summPrice").text(this.lastPrice.toFixed(3));
 				//console.log("socket onmessage");
 				var JR = sj.rate;
 				var lastPrice = 0;
@@ -544,8 +561,8 @@
 					substrData = ";1";
 				$("#view").html('<table class="table"></table>');
 				if(this.sock != null){
-					console.log("send",pair+";"+findRange+";"+ viewRange +";"+ rate+";"+proc+substrData);
-					this.sock.send(pair+";"+findRange+";"+ viewRange +";"+ rate+";"+proc+substrData);
+					console.log("send",pair+";"+findRange+";"+ viewRange +";"+ rate+";"+proc+substrData+";"+this.lastCount+";"+this.lastPrice);
+					this.sock.send(pair+";"+findRange+";"+ viewRange +";"+ rate+";"+proc+substrData+";"+this.lastCount+";"+this.lastPrice);
 				}else {
 					console.log("error work");
 					setTimeout(function(){self.work();},500);

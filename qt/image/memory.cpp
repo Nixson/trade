@@ -15,7 +15,7 @@ void Memory::get(uint date, iDepth &to){
 void Memory::get(uint date, iTradesLst &to){
     dLink->get(date,to);
 }
-void Memory::get(uint datein, uint dateout, QHash<uint, iDepth> &to){
+void Memory::get(uint datein, uint dateout, QMap<uint, iDepth> &to){
     dLink->get(datein,dateout,to);
 }
 void Memory::get(uint datein, uint dateout, iTradesData &to){

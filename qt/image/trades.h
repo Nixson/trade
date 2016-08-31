@@ -40,7 +40,7 @@ public slots:
 private:
     NetRequest *req;
     QTimer *timer, *timerMin;
-    QHash <uint, iDepth> dep;
+    QMap <uint, iDepth> dep;
     iTradesData trade;
     int pNum;
     void loadOb();

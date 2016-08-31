@@ -11,15 +11,15 @@ public:
     void rm(uint date, QString type);
     void set(uint date, iDepth &from);
     void get(uint date, iDepth &to);
-    void get(uint datein, uint dateout, QHash<uint, iDepth> &to);
+    void get(uint datein, uint dateout, QMap<uint, iDepth> &to);
 
     void set(uint date, iTradesLst &from);
     void get(uint date, iTradesLst &to);
     void get(uint datein, uint dateout, iTradesData &to);
 
 private:
-    QHash<QString, QReadWriteLock *> qm;
-    QHash<uint, iDepth> depth;
+    QMap<QString, QReadWriteLock *> qm;
+    QMap<uint, iDepth> depth;
     iTradesData trades;
 };
 

@@ -239,7 +239,7 @@ void Depth::clearMin(){
     uint tdime = current.toTime_t();
     uint remove = tdime - 3600*24;
     uint lastRemove = tSafe - 3600*24;
-    QHash <uint, iDepth> depSafe;
+    QMap <uint, iDepth> depSafe;
     for(auto dIterDep = dep.begin(); dIterDep!=dep.end();){
         uint dIter = dIterDep.key();
         if(dIter < remove){
@@ -278,7 +278,7 @@ void Depth::loadOb(){
     QDateTime currentHour = QDateTime::fromString(data,"yyyy-MM-dd HH:00:00");
     uint tSafe = currentHour.toTime_t();
     for( int i = 23; i >= 0; --i){
-        QHash <uint, iDepth> depSafe;
+        QMap <uint, iDepth> depSafe;
         uint lastFile = tSafe - 3600*i;
         QString filename = dirPath+"/depth"+QString::number(lastFile)+".ob";
         QFile depthFile(filename);
@@ -317,17 +317,17 @@ void Depth::updateMin(){
     uint tdimeMin = tdime - 60;
     uint remove = tdime - 3600*24;
     /*Создаем массив за минуту*/
-    QHash <uint, iDepth> tmp;
-    QHash <QString, iFloat > block;
+    QMap <uint, iDepth> tmp;
+    QMap <QString, iFloat > block;
     uint cnt = 0;
-    QHash <uint, iDepth>::const_iterator dIterDep = dep.constBegin();
+    QMap <uint, iDepth>::const_iterator dIterDep = dep.constBegin();
     while (dIterDep != dep.constEnd()) {
         uint dIter = dIterDep.key();
         if(dIter > remove){
             if(dIter >= tdimeMin && dIter <= tdime){
                 tmp[dIter] = dep[dIter];
                 ++cnt;
-                QHashIterator<QString, iTypes> iter(dep[dIter]);
+                QMapIterator<QString, iTypes> iter(dep[dIter]);
                 while(iter.hasNext()){
                     iter.next();
                     QString iName = iter.key();
@@ -362,7 +362,7 @@ void Depth::updateMin(){
     pair.min = 0;
     pair.max = 0;
     iDepth src;
-    QHash<QString, iFloat >::const_iterator i = block.constBegin();
+    QMap<QString, iFloat >::const_iterator i = block.constBegin();
     while (i != block.constEnd()) {
         QString name = i.key();
         if(pair.max < block[name]["maxA"])

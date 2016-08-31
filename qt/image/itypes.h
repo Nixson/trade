@@ -29,6 +29,11 @@ typedef struct iRate_str {
     bool  reverse;
 } iRate;
 
+typedef struct iReal_str {
+    int count;
+    float price;
+} iReal;
+
 typedef struct iTask_struct {
     uint iduser;
     QString type;
@@ -99,17 +104,17 @@ QDataStream &operator>>(QDataStream &out, Trade_struct &str);
 typedef QVector<iPair> iPairs;
 typedef QMap<uint, infoBlock> ufBlock;
 typedef QMap<uint, infoBlock> umBlock;
-typedef QHash<QString, iPairs> iTypes;
-typedef QHash<QString, iTypes> iDepth;
+typedef QMap<QString, iPairs> iTypes;
+typedef QMap<QString, iTypes> iDepth;
 
-typedef QHash<QString, float> iFloat;
+typedef QMap<QString, float> iFloat;
 
 typedef QVector<iTrade> iTrades;
-typedef QHash <QString,iTrades> iTradesLst;
-typedef QHash<uint, iTradesLst> iTradesData;
+typedef QMap <QString,iTrades> iTradesLst;
+typedef QMap<uint, iTradesLst> iTradesData;
 
-typedef QHash<uint, float> ufMap;
-typedef QHash<uint, QString> usMap;
+typedef QMap<uint, float> ufMap;
+typedef QMap<uint, QString> usMap;
 
 typedef QVector<QPair<uint, float>> ufVector;
 

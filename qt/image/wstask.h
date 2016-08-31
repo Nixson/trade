@@ -27,14 +27,14 @@ private:
     float               stepRate;
     iTaskResult         *result;
     iTradesData         *tradeLink, findTrade;
-    QHash<uint,iDepth>  *depthLink, findDepth;
+    QMap<uint,iDepth>  *depthLink, findDepth;
 
     iTradesData         trade;
-    QHash<uint,iDepth>  depth;
+    QMap<uint,iDepth>  depth;
 
 
 
-    QHash <int, strTable> lastAsc;
+    QMap <int, strTable> lastAsc;
     QVector<tmpTable>  rateUser;
     QVector< strResponse > rangeUser;
     uint                missing;

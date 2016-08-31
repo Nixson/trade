@@ -37,6 +37,10 @@ void WSrest::onNewConnection(){
     cl.reverse = false;
     cl.lastPeriod =current.toTime_t();
     rate.insert(last,cl);
+    iReal rc;
+    rc.count = 0;
+    rc.price = 0.0;
+    ireal.insert(last,rc);
     ++last;
 }
 
@@ -146,11 +150,27 @@ void WSrest::updTmpTable(int id, QVector <tmpTable> &tt,  ufBlock &rest){
                             else
                                 rsp.response = false;
                         }
-                        if(rangeUser[id].size()==0){
-                            rsp.diffR = std::abs(rsp.price - rate[id].lastPrice);
+                        rsp.diffR = 0.0;
+                        if(pos=='>'){
+                            if(rate[id].reverse){
+                                ireal[id].count++;
+                                ireal[id].price -= price;
+                            }
+                            else {
+                                ireal[id].count--;
+                                ireal[id].price += price;
+                            }
                         }
-                        else
-                            rsp.diffR = std::abs(rangeUser[id][rangeUser[id].size()-1].price - rate[id].lastPrice);
+                        else {
+                            if(rate[id].reverse){
+                                ireal[id].count--;
+                                ireal[id].price += price;
+                            }
+                            else {
+                                ireal[id].count++;
+                                ireal[id].price -= price;
+                            }
+                        }
                         rsp.diffM = std::abs(rsp.price - rate[id].lastPrice);
                             rangeUser[id].append(rsp);
                         lastAsc.remove(id);
@@ -399,7 +419,9 @@ void WSrest::print(int id, QVector <strTable> &sdata, ufBlock &rest, bool view){
             }
             tmp << "{\"dtime\":\""+QString::number(tmpUserState.key())+"\", \"data\":\""+QString::number(val.range)+"::"+priceStr.join(", ")+"\"}";
         }
-        resp = "{\"rate\":["+stl.join(",")+"], \"tab\": ["+sts.join(",")+"],\"last\":{\"range\":"+QString::number(rate[id].lastRange)+",\"asc\": "+sta+" }, \"rtables\": ["+stu.join(",")+"],\"tmp\": ["+tmp.join(",")+"] }";
+        resp = "{\"rate\":["+stl.join(",")+"], \"tab\": ["+sts.join(",")+"],\"last\":{\"range\":"
+                +QString::number(rate[id].lastRange)+",\"asc\": "+sta+" }, \"rtables\": ["+stu.join(",")+"],\"tmp\": ["+tmp.join(",")
+                +"], \"summ\": {\"count\":"+QString::number(ireal[id].count)+",\"price\":"+QString::number(ireal[id].price)+"} }";
         pClient->sendTextMessage(resp);
     }
 }
@@ -428,6 +450,9 @@ void WSrest::processTextMessage(QString message)
             rate[idusersocs].perc = rsp[4].toFloat();
             if(rsp[5]=="0")
                 rate[idusersocs].reverse = true;
+
+            ireal[idusersocs].count = rsp[6].toInt();
+            ireal[idusersocs].price = rsp[7].toFloat();
         }
         catch(...){}
         rate[idusersocs].rateFloat = (float)rate[idusersocs].rate;

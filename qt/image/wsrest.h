@@ -33,6 +33,7 @@ private:
     QHash<QWebSocket *, int>     m_clients;
     QHash<int, QWebSocket *>     am_clients;
     QHash <int, iRate>           rate;
+    QHash <int, iReal>           ireal;
     QHash <int, QVector <tmpTable>> rateUser;
     QHash <int, strTable>        lastAsc;
     QHash <int, QVector< strResponse > > rangeUser;
