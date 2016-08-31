@@ -236,6 +236,7 @@
 				$("#dtime").text( ((stimer - this.stimer)/1000 ).toFixed(2) + "сек." );
 				$("#good").text(data.good);
 				$("#bad").text(data.bad);
+				$("#reverse").prop("checked",data.reverse);
 
 				this.close();
 				this.range.close();
