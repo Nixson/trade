@@ -210,7 +210,7 @@ void WsWorker::response(iTask *step, iTaskResult *result){
             if(am_clients.contains(step->iduser))
                 am_clients[step->iduser]->sendTextMessage(msg);
         }else {
-            QString msg = "{\"dtime\":0,\"perc\":0,\"rate\":0,\"good\":\""+QString::number(good)+"\",\"bad\":\""+QString::number(bad)+"\"}";
+            QString msg = "{\"dtime\":0,\"perc\":0,\"rate\":0,\"good\":\""+QString::number(good)+"\",\"reverse\":0,\"bad\":\""+QString::number(bad)+"\"}";
             if(am_clients.contains(step->iduser))
                 am_clients[step->iduser]->sendTextMessage(msg);
         }
