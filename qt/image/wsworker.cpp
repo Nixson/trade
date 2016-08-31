@@ -151,6 +151,7 @@ void WsWorker::response(iTask *step, iTaskResult *result){
         badStep->rate = 0;
 
         bool find = false;
+        bool findReverse = false;
 
         for (auto key = 0; key < user[step->iduser].result.length(); ++key) {
             auto info = user[step->iduser].result[key];
@@ -164,7 +165,7 @@ void WsWorker::response(iTask *step, iTaskResult *result){
             }
             if(good < est){
                 good = est;
-                if(good >= user[step->iduser].rangeLabel){
+                if(good > user[step->iduser].rangeLabel){
                     find = true;
                     std::cout << "result: " << key << std::endl;
                     goodStep = user[step->iduser].task[key];
@@ -173,6 +174,7 @@ void WsWorker::response(iTask *step, iTaskResult *result){
             if(bad > est && est > 0.01) {
                 bad = est;
                 if(user[step->iduser].rangeLabel < 1/bad){
+                    findReverse = true;
                     badStep = user[step->iduser].task[key];
                 }
             }
@@ -181,11 +183,30 @@ void WsWorker::response(iTask *step, iTaskResult *result){
         std::cout << "best: " << good << std::endl;
         std::cout << "best: " << goodStep->PeriodStart << ":" << goodStep->rate << std::endl;
         std::cout << "bed: " << bad << std::endl;
-        if(find){
-            uint currentInt = current.toTime_t() - goodStep->PeriodStart;
-            QString msg = "{\"dtime\":"+QString::number((int)currentInt)+",\"perc\":"
-                    +QString::number((int)goodStep->perc)+",\"rate\":"+QString::number((int)goodStep->rate)
-                    +",\"good\":\""+QString::number(good)+"\",\"bad\":\""+QString::number(bad)+"\"}";
+        if(find || findReverse){
+            if(find && findReverse){
+                if(good > 1/bad)
+                    findReverse = false;
+                else
+                    find = false;
+            }
+            QString msg;
+            if(find){
+                uint currentInt = current.toTime_t() - goodStep->PeriodStart;
+                msg = "{\"dtime\":"+QString::number((int)currentInt)
+                        +",\"perc\":"+QString::number((int)goodStep->perc)
+                        +",\"rate\":"+QString::number((int)goodStep->rate)
+                        +",\"reverse\": 0"
+                        +",\"good\":\""+QString::number(good)+"\",\"bad\":\""+QString::number(bad)+"\"}";
+            }
+            else {
+                uint currentInt = current.toTime_t() - badStep->PeriodStart;
+                msg = "{\"dtime\":"+QString::number((int)currentInt)
+                        +",\"perc\":"+QString::number((int)badStep->perc)
+                        +",\"rate\":"+QString::number((int)badStep->rate)
+                        +",\"reverse\": 1"
+                        +",\"good\":\""+QString::number(good)+"\",\"bad\":\""+QString::number(bad)+"\"}";
+            }
             if(am_clients.contains(step->iduser))
                 am_clients[step->iduser]->sendTextMessage(msg);
         }else {
