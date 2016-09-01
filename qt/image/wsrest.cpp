@@ -151,7 +151,7 @@ void WSrest::updTmpTable(int id, QVector <tmpTable> &tt,  ufBlock &rest){
                                 rsp.response = false;
                         }
                         rsp.diffR = 0.0;
-                        if(pos=='>'){
+                        if(lastAsc[id].pos=='>'){
                             if(rate[id].reverse){
                                 ireal[id].count++;
                                 ireal[id].price -= price;
