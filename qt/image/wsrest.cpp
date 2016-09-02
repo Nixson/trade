@@ -167,6 +167,7 @@ void WSrest::updTmpTable(int id, QVector <tmpTable> &tt,  ufBlock &rest){
                                 ireal[id].price -= price;
                             }
                         }
+                        std::cout << "tr: " << lastAsc[id].pos << " " << pos << rate[id].reverse << rsp.response << std::endl;
                         rsp.diffM = std::abs(rsp.price - rate[id].lastPrice);
                             rangeUser[id].append(rsp);
                         lastAsc.remove(id);
