@@ -445,7 +445,7 @@ void WSrest::processTextMessage(QString message)
             rate[idusersocs].view = rsp[2].toInt();
             rate[idusersocs].rate = rsp[3].toInt();
             rate[idusersocs].perc = rsp[4].toFloat();
-            if(rsp[5]=="0")
+            if(rsp[5]=="1")
                 rate[idusersocs].reverse = true;
 
             ireal[idusersocs].count = rsp[6].toInt();
