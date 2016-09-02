@@ -447,6 +447,7 @@ void WSrest::processTextMessage(QString message)
             rate[idusersocs].perc = rsp[4].toFloat();
             if(rsp[5]=="1")
                 rate[idusersocs].reverse = true;
+            std::cout << "reverse: " << rate[idusersocs].reverse << std::endl;
 
             ireal[idusersocs].count = rsp[6].toInt();
             ireal[idusersocs].price = rsp[7].toFloat();
