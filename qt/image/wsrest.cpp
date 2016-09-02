@@ -139,17 +139,13 @@ void WSrest::updTmpTable(int id, QVector <tmpTable> &tt,  ufBlock &rest){
                         rsp.price = price;
                         rsp.range = info.range;
                         if(lastAsc[id].pos==pos){
-                            if(rate[id].reverse)
-                                rsp.response = false;
-                            else
-                                rsp.response = true;
+                            rsp.response = true;
                         }
                         else {
-                            if(rate[id].reverse)
-                                rsp.response = true;
-                            else
-                                rsp.response = false;
+                            rsp.response = false;
                         }
+                        if(rate[id].reverse)
+                            rsp.response = !rsp.response;
                         rsp.diffR = 0.0;
                         if(lastAsc[id].pos=='>'){
                             if(rate[id].reverse){
