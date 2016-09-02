@@ -149,22 +149,22 @@ void WSrest::updTmpTable(int id, QVector <tmpTable> &tt,  ufBlock &rest){
                         rsp.diffR = 0.0;
                         if(lastAsc[id].pos=='>'){
                             if(rate[id].reverse){
-                                ireal[id].count++;
-                                ireal[id].price -= price;
-                            }
-                            else {
                                 ireal[id].count--;
                                 ireal[id].price += price;
+                            }
+                            else {
+                                ireal[id].count++;
+                                ireal[id].price -= price;
                             }
                         }
                         else {
                             if(rate[id].reverse){
-                                ireal[id].count--;
-                                ireal[id].price += price;
-                            }
-                            else {
                                 ireal[id].count++;
                                 ireal[id].price -= price;
+                            }
+                            else {
+                                ireal[id].count--;
+                                ireal[id].price += price;
                             }
                         }
                         std::cout << "tr: " << lastAsc[id].pos << " " << pos << rate[id].reverse << rsp.response << std::endl;
