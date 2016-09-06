@@ -64,8 +64,8 @@ void WsTask::run(){
                 ++result->bad;
         }
     }
-    catch(int err){
-        std::cout << "error task: "<< err << std::endl;
+    catch(...){
+        std::cout << "error task " << std::endl;
     }
 
 

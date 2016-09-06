@@ -137,8 +137,8 @@ void WsWorker::response(iTask *step, iTaskResult *result){
         user[step->iduser].task.append(step);
         user[step->iduser].result.append(result);
         std::cout << key << std::endl;
-    } catch(int err){
-        std::cout << "error: " << err << std::endl;
+    } catch(...){
+        std::cout << "error response " << std::endl;
     }
     if((uint)user[step->iduser].task.length() == user[step->iduser].tasks){
         QDateTime current = QDateTime::currentDateTime();
