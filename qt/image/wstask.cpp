@@ -14,55 +14,61 @@ void WsTask::run(){
     result->bad = 0;
     result->good = 0;
     result->lost = 0;
-    Memory::get(step->PeriodStart,step->PeriodStop,*tradeLink);
-    Memory::get(step->PeriodStart,step->PeriodStop,*depthLink);
-
-    //Собираем последние 20 минут
-    trade = *tradeLink;
-    depth = *depthLink;
-    uint last20 = step->PeriodStop - 60*20;
-    for(uint pos = last20; pos <= step->PeriodStop; ++pos){
-        if(trade.contains(pos)){
-            findTrade[pos] = trade[pos];
-            trade.remove(pos);
+    try {
+        Memory::get(step->PeriodStart,step->PeriodStop,*tradeLink);
+        Memory::get(step->PeriodStart,step->PeriodStop,*depthLink);
+        //Собираем последние 20 минут
+        trade = *tradeLink;
+        depth = *depthLink;
+        uint last20 = step->PeriodStop - 60*20;
+        for(uint pos = last20; pos <= step->PeriodStop; ++pos){
+            if(trade.contains(pos)){
+                findTrade[pos] = trade[pos];
+                trade.remove(pos);
+            }
+            if(depth.contains(pos)){
+                findDepth[pos] = depth[pos];
+                depth.remove(pos);
+            }
         }
-        if(depth.contains(pos)){
-            findDepth[pos] = depth[pos];
-            depth.remove(pos);
-        }
-    }
 
 
 
 
-    rate.lastPeriod = 0;
-    stepRate = step->rate;
-    getMax();
+        rate.lastPeriod = 0;
+        stepRate = step->rate;
+        getMax();
 
-    ufBlock list = getStep();
-    getRange(list);
-    updTmpTable(list);
-    reRange();
-    depth.clear();
-    trade.clear();
-
-    for(uint pos = last20; pos <= step->PeriodStop; ++pos){
-        if(findDepth.contains(pos))
-            depth[pos] = findDepth[pos];
-        if(findTrade.contains(pos))
-            trade[pos] = findTrade[pos];
-        getLastDep(pos);
-        getRange(pos,listDepth);
-        updTmpTable(listDepth);
+        ufBlock list = getStep();
+        getRange(list);
+        updTmpTable(list);
         reRange();
+        depth.clear();
+        trade.clear();
+
+        for(uint pos = last20; pos <= step->PeriodStop; ++pos){
+            if(findDepth.contains(pos))
+                depth[pos] = findDepth[pos];
+            if(findTrade.contains(pos))
+                trade[pos] = findTrade[pos];
+            getLastDep(pos);
+            getRange(pos,listDepth);
+            updTmpTable(listDepth);
+            reRange();
+        }
+
+        foreach(auto rng, rangeUser){
+            if(rng.response)
+                ++result->good;
+            else
+                ++result->bad;
+        }
+    }
+    catch(int err){
+        std::cout << "error task: "<< err << std::endl;
     }
 
-    foreach(auto rng, rangeUser){
-        if(rng.response)
-            ++result->good;
-        else
-            ++result->bad;
-    }
+
 
     emit response(step, result);
 }

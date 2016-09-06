@@ -131,11 +131,15 @@ void WsWorker::poolIn(iTask task){
     QThreadPool::globalInstance()->start(wtask);
 }
 void WsWorker::response(iTask *step, iTaskResult *result){
-    int key = user[step->iduser].tasks - user[step->iduser].taskLast;
-    --user[step->iduser].taskLast;
-    user[step->iduser].task.append(step);
-    user[step->iduser].result.append(result);
-    std::cout << key << std::endl;
+    try {
+        int key = user[step->iduser].tasks - user[step->iduser].taskLast;
+        --user[step->iduser].taskLast;
+        user[step->iduser].task.append(step);
+        user[step->iduser].result.append(result);
+        std::cout << key << std::endl;
+    } catch(int err){
+        std::cout << "error: " << err << std::endl;
+    }
     if((uint)user[step->iduser].task.length() == user[step->iduser].tasks){
         QDateTime current = QDateTime::currentDateTime();
         std::cout << "\n responseOut" << std::endl;
@@ -162,6 +166,7 @@ void WsWorker::response(iTask *step, iTaskResult *result){
                 if(bad==0.0){
                     bad = est;
                     if(user[step->iduser].rangeLabel < 1/bad){
+                        std::cout << "findReverse: " << user[step->iduser].rangeLabel << " : " << 1/bad << std::endl;
                         findReverse = true;
                         badStep = user[step->iduser].task[key];
                     }
@@ -169,6 +174,7 @@ void WsWorker::response(iTask *step, iTaskResult *result){
                 else if(bad > est) {
                     bad = est;
                     if(user[step->iduser].rangeLabel < 1/bad){
+                        std::cout << "findReverse: " << user[step->iduser].rangeLabel << " : " << 1/bad << std::endl;
                         findReverse = true;
                         badStep = user[step->iduser].task[key];
                     }
@@ -185,6 +191,7 @@ void WsWorker::response(iTask *step, iTaskResult *result){
             if(bad > est && est > 0.01) {
                 bad = est;
                 if(user[step->iduser].rangeLabel < 1/bad){
+                    std::cout << "findReverse: " << user[step->iduser].rangeLabel << " : " << 1/bad << std::endl;
                     findReverse = true;
                     badStep = user[step->iduser].task[key];
                 }
