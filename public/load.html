@@ -217,7 +217,7 @@
 			range: null,
 			build: function(){
 				var self = this;
-				self.sock = new WebSocket("ws://trade.bhelp.com/ws");
+				self.sock = new WebSocket("ws://tradeintellect.ru/ws");
 				self.sock.onopen = function(){console.log("ws connect");};
 				self.sock.onclose = function(){console.log("ws onclose"); self.sock = null; setTimeout(function(){self.build();},2000);};
 				self.sock.onmessage = function(msg){self.onmessage(msg);};
@@ -225,7 +225,7 @@
 			},
 			buildRange: function(){
 				var self = this;
-				self.range = new WebSocket("ws://trade.bhelp.com/convert");
+				self.range = new WebSocket("ws://tradeintellect.ru/convert");
 				self.range.onopen = function(){console.log("convert connect");};
 				self.range.onclose = function(){console.log("convert onclose"); self.range = null; setTimeout(function(){self.buildRange();},2000);};
 				self.range.onmessage = function(msg){self.onmessageRange(msg);};
