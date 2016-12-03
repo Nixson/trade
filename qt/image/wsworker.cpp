@@ -103,10 +103,10 @@ void WsWorker::processTextMessage(QString message){
             std::cout << currentInt << ", "  << timeStart << std::endl;
             if(currentInt - timeStart < 60*20)
                 continue;
-            for(uint rangeRate = 0; rangeRate < user[idusersocs].rateRange; ++rangeRate){
-                uint rate = user[idusersocs].rateIn + rateRange*rangeRate;
-                for(uint rangePrice = 0; rangePrice < user[idusersocs].priceRange; ++rangePrice){
-                    float price = user[idusersocs].priceIn + (float)priceRange*rangePrice;
+            for(uint rangeRate = 0; rangeRate < rateRange; ++rangeRate){
+                uint rate = user[idusersocs].rateIn + user[idusersocs].rateRange*rangeRate;
+                for(uint rangePrice = 0; rangePrice < priceRange; ++rangePrice){
+                    float price = user[idusersocs].priceIn + (float)user[idusersocs].priceRange*rangePrice;
                     iTask task;
                     task.iduser = idusersocs;
                     task.type = user[idusersocs].type;
