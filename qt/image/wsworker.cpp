@@ -136,7 +136,7 @@ void WsWorker::response(iTask *step, iTaskResult *result){
         --user[step->iduser].taskLast;
         user[step->iduser].task.append(step);
         user[step->iduser].result.append(result);
-        std::cout << key << std::endl;
+        std::cout << key << ":" << user[step->iduser].tasks << ":" << user[step->iduser].taskLast << std::endl;
     } catch(...){
         std::cout << "error response " << std::endl;
     }
