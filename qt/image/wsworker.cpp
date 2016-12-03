@@ -99,7 +99,7 @@ void WsWorker::processTextMessage(QString message){
 
         std::cout << "QThreadPool init:" << timeRange << std::endl;
         for(uint rangeTime = 1; rangeTime < timeRange; ++rangeTime){
-            uint timeStart = currentInt - user[idusersocs].timeIn - timeRange*rangeTime;
+            uint timeStart = currentInt - user[idusersocs].timeIn - user[idusersocs].timeRange*rangeTime;
             std::cout << currentInt << ", "  << timeStart << std::endl;
             if(currentInt - timeStart < 60*20)
                 continue;
