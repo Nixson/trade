@@ -261,6 +261,8 @@
 				console.log(this.resultG,this.resultGtmp);
 				this.resultG += this.resultGtmp;
 				this.resultR += this.resultRtmp;
+				this.resultGtmp = 0;
+				this.resultRtmp = 0;
 				console.log(this.resultG,this.resultGtmp);
 				if(data.dtime > 0){
 					$("#findRange").val(data.dtime);
@@ -448,8 +450,8 @@
 				$("#sTable").html('<table class="table"><tr>'+stable+'</tr><tr>'+stableP+'</tr><tr>'+stableData+'</tr></table>');
 
 				if(typeof sj.rtables!='undefined'){
-					var resultG = 0;
-					var resultR = 0;
+					var resultGs = 0;
+					var resultRs = 0;
 					var cnt = 0;
 					$("#rtable").html('<table class="table"></table>');
 					/*for(var str in sj.rtables){
@@ -460,11 +462,11 @@
 						var resp = "";
 						var date = new Date(sj.rtables[str].dtime*1000);
 						if(sj.rtables[str].response==1){
-							resultG++;
+							resultGs++;
 							resp +='<tr style="background: #005500; color: #ffffff;"><td>';
 						}
 						else{
-							resultR++;
+							resultRs++;
 							resp +='<tr style="background: #550000; color: #ffffff;"><td>';
 						}
 						resp+= date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
@@ -479,13 +481,13 @@
 						$("#rtable table").prepend(resp);
 						//cnt--;
 					}
-					console.log(this.resultGtmp,this.resultG,resultG);
-					this.resultGtmp = resultG;
-					this.resultRtmp = resultR;
-					resultG+=this.resultG;
-					resultR+=this.resultR;
-					console.log(this.resultGtmp,this.resultG,resultG);
-					resp = '<tr><td style="background: #005500; color: #ffffff;">'+resultG+'</td><td style="background: #550000; color: #ffffff;">'+resultR+'</td></tr>';
+					console.log(this.resultGtmp,this.resultG,resultGs);
+					this.resultGtmp = resultGs;
+					this.resultRtmp = resultRs;
+					resultGs+=this.resultG;
+					resultRs+=this.resultR;
+					console.log(this.resultGtmp,this.resultG,resultGs);
+					resp = '<tr><td style="background: #005500; color: #ffffff;">'+resultGs+'</td><td style="background: #550000; color: #ffffff;">'+resultRs+'</td></tr>';
 					$("#rtable table").prepend(resp);
 				}
 
