@@ -239,6 +239,10 @@
 						self.reWork();
 				},500);
 			},
+			resultG: 0,
+			resultR: 0,
+			resultGtmp:0,
+			resultRtmp:0,
 			onload: false,
 			onmessageRange: function(msg){
 				this.onload = false;
@@ -254,8 +258,10 @@
 				this.close();
 				this.range.close();
 
+				console.log(this.resultG,this.resultGtmp);
 				this.resultG += this.resultGtmp;
 				this.resultR += this.resultRtmp;
+				console.log(this.resultG,this.resultGtmp);
 				if(data.dtime > 0){
 					$("#findRange").val(data.dtime);
 					$("#rate").val(data.rate);
@@ -484,10 +490,6 @@
 				}
 
 			},
-			resultG: 0,
-			resultR: 0,
-			resultGtmp:0,
-			resultRtmp:0,
 			close: function(){
 				this.sock.close();
 			},
