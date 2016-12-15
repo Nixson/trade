@@ -449,6 +449,7 @@
 					/*for(var str in sj.rtables){
 						cnt++;
 					}*/
+					console.log(sj.rtables);
 					for(var str in sj.rtables){
 						var resp = "";
 						var date = new Date(sj.rtables[str].dtime*1000);
@@ -472,10 +473,12 @@
 						$("#rtable table").prepend(resp);
 						//cnt--;
 					}
+					console.log(this.resultGtmp,this.resultG,resultG);
 					this.resultGtmp = resultG;
 					this.resultRtmp = resultR;
 					resultG+=this.resultG;
 					resultR+=this.resultR;
+					console.log(this.resultGtmp,this.resultG,resultG);
 					resp = '<tr><td style="background: #005500; color: #ffffff;">'+resultG+'</td><td style="background: #550000; color: #ffffff;">'+resultR+'</td></tr>';
 					$("#rtable table").prepend(resp);
 				}
