@@ -294,6 +294,7 @@ QVector <strTable> WSrest::reRange(int id){
             cntR = stR.count;
         }
         int rSumm = cntM+cntF+cntR;
+        std::cout << "maxSt: " << rate[id].maxSt << ":" << rSumm << std::endl;
         if(rSumm >= rate[id].maxSt ){
             sdata.append(stF);
             sdata.append(stM);
@@ -305,6 +306,7 @@ QVector <strTable> WSrest::reRange(int id){
             // если да, тогда ждем покупку в этом диапазоне
             int summ = cntM + cntF;
             int absRange = abs(cntM - cntF);
+            std::cout << "maxSt range: " << rate[id].maxSt << ":" << summ << std::endl;
             if(summ >= rate[id].maxSt){
                 float prc = 100*(float)absRange/(float)summ;
                 //std:: << rate[id].lastRange << " summ:" << summ << ", range:" << prc << std::endl;
