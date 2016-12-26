@@ -115,6 +115,10 @@
 		    <label for="rate"> Процент реакции: </label>
 		    <input type="number" class="form-control" id="proc" placeholder="">
 		  </div>
+		  <div class="form-group">
+		    <label for="rate"> Минимум продаж в стакане: </label>
+		    <input type="number" class="form-control" id="minimum" placeholder="">
+		  </div>
 		  <div class="checkbox">
 		    <label for="reverse"><input type="checkbox" id="reverse"> Реверс</label>
 		    
@@ -564,14 +568,15 @@
 				var viewRange = $("#findRange").val();
 				var rate = $("#rate").val();
 				var proc = $("#proc").val();
+				var minimum = $('#minimum').val();
 				var reverse = $("#reverse").prop("checked");
 				var substrData = ";0";
 				if(reverse)
 					substrData = ";1";
 				$("#view").html('<table class="table"></table>');
 				if(this.sock != null){
-					console.log("send",pair+";"+findRange+";"+ viewRange +";"+ rate+";"+proc+substrData+";"+this.lastCount+";"+this.lastPrice);
-					this.sock.send(pair+";"+findRange+";"+ viewRange +";"+ rate+";"+proc+substrData+";"+this.lastCount+";"+this.lastPrice);
+					console.log("send",pair+";"+findRange+";"+ viewRange +";"+ rate+";"+proc+substrData+";"+this.lastCount+";"+this.lastPrice+';'+minimum);
+					this.sock.send(pair+";"+findRange+";"+ viewRange +";"+ rate+";"+proc+substrData+";"+this.lastCount+";"+this.lastPrice+';'+minimum);
 				}else {
 					console.log("error work");
 					setTimeout(function(){self.work();},500);
