@@ -448,7 +448,7 @@ void WSrest::processTextMessage(QString message)
             rate[idusersocs].view = rsp[2].toInt();
             rate[idusersocs].rate = rsp[3].toInt();
             rate[idusersocs].perc = rsp[4].toFloat();
-            rate[idusersocs].maxSt = rsp[6].toInt();
+            rate[idusersocs].maxSt = rsp[8].toInt();
             if(rsp[5]=="1")
                 rate[idusersocs].reverse = true;
             std::cout << "reverse: " << rate[idusersocs].reverse << std::endl;
