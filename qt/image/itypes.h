@@ -18,6 +18,7 @@ typedef struct iRate_str {
     int find;
     int view;
     int rate;
+    int maxSt;
     float perc;
     float rateFloat;
     float lastPrice;

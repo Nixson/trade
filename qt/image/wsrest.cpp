@@ -27,6 +27,7 @@ void WSrest::onNewConnection(){
     cl.type = "btc_usd";
     cl.find = 3600;
     cl.view = 100;
+    cl.maxSt = 30;
     cl.rate = 10;
     cl.perc = 20.0;
     cl.rateFloat = 10.0;
@@ -293,7 +294,7 @@ QVector <strTable> WSrest::reRange(int id){
             cntR = stR.count;
         }
         int rSumm = cntM+cntF+cntR;
-        if(rSumm >= 2 ){
+        if(rSumm >= rate[id].maxSt ){
             sdata.append(stF);
             sdata.append(stM);
             sdata.append(stR);
@@ -304,7 +305,7 @@ QVector <strTable> WSrest::reRange(int id){
             // если да, тогда ждем покупку в этом диапазоне
             int summ = cntM + cntF;
             int absRange = abs(cntM - cntF);
-            if(summ > 0){
+            if(summ >= rate[id].maxSt){
                 float prc = 100*(float)absRange/(float)summ;
                 //std:: << rate[id].lastRange << " summ:" << summ << ", range:" << prc << std::endl;
                 if(prc > rate[id].perc){
@@ -445,6 +446,7 @@ void WSrest::processTextMessage(QString message)
             rate[idusersocs].view = rsp[2].toInt();
             rate[idusersocs].rate = rsp[3].toInt();
             rate[idusersocs].perc = rsp[4].toFloat();
+            rate[idusersocs].maxSt = rsp[6].toInt();
             if(rsp[5]=="1")
                 rate[idusersocs].reverse = true;
             std::cout << "reverse: " << rate[idusersocs].reverse << std::endl;
