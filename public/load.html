@@ -515,6 +515,7 @@
 					window.localStorage.setItem("input.rate",$("#w-rate").val());
 					window.localStorage.setItem("input.proc",$("#w-proc").val());
 					window.localStorage.setItem("input.label",$("#w-label").val());
+					window.localStorage.setItem("input.minimum",$("#minimum").val());
 				}
 				list += $('#pair').val() + ';';
 				list += ( parseInt($('#w-timeSliderResult').text()) || 0 ).toString() + ';';
@@ -610,6 +611,7 @@
 					$("#w-rate").val(stor.getItem("input.rate"));
 					$("#w-proc").val(stor.getItem("input.proc"));
 					$("#w-label").val(stor.getItem("input.label"));
+					$("#minimum").val(stor.getItem("input.minimum"));
 				}
 			}
 		};
