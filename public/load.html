@@ -173,6 +173,8 @@
 			</tr>
 		</table>
 		<div id="rtable"></div>
+		<div id="deptList"></div>
+
 	</div>
 </div>
 
@@ -597,14 +599,19 @@
 				var volatilitymin = $('#volatilitymin').val();
 				var volatilitymax = $('#volatilitymax').val();
 				var volatilityRange = $('#volatilityMaxRange').text();
+				var deptList = $('#deptList').html();
+				var depth = '';
+				if(deptList.length > 0) {
+					depth = deptList.split('<br />').join(':');
+				}
 				var reverse = $("#reverse").prop("checked");
 				var substrData = ";0";
 				if(reverse)
 					substrData = ";1";
 				$("#view").html('<table class="table"></table>');
 				if(this.sock != null){
-					console.log("send",pair+";"+findRange+";"+ viewRange +";"+ rate+";"+proc+substrData+";"+this.lastCount+";"+this.lastPrice+';'+minimum+';'+volatilitymin+';'+volatilitymax+';'+volatilityRange);
-					this.sock.send(pair+";"+findRange+";"+ viewRange +";"+ rate+";"+proc+substrData+";"+this.lastCount+";"+this.lastPrice+';'+minimum+';'+volatilitymin+';'+volatilitymax+';'+volatilityRange);
+					console.log("send",pair+";"+findRange+";"+ viewRange +";"+ rate+";"+proc+substrData+";"+this.lastCount+";"+this.lastPrice+';'+minimum+';'+volatilitymin+';'+volatilitymax+';'+volatilityRange+';'+depth);
+					this.sock.send(pair+";"+findRange+";"+ viewRange +";"+ rate+";"+proc+substrData+";"+this.lastCount+";"+this.lastPrice+';'+minimum+';'+volatilitymin+';'+volatilitymax+';'+volatilityRange+';'+depth);
 				}else {
 					console.log("error work");
 					setTimeout(function(){self.work();},500);
