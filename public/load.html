@@ -290,16 +290,16 @@
 					$("#findRange").val(data.dtime);
 					$("#rate").val(data.rate);
 					$("#proc").val(data.perc);
-					$('#volatilityMinRange').val(data.max - data.min);
-					$('#volatilityMaxRange').val(data.max - data.min);
+					$('#volatilityMinRange').text(data.max - data.min);
+					$('#volatilityMaxRange').text(data.max - data.min);
 					setTimeout(function(){self.work();},3000);
 				}
 				else {
 					$("#findRange").val(0);
 					$("#rate").val(0);
 					$("#proc").val(0);
-					$('#volatilityMinRange').val(0);
-					$('#volatilityMaxRange').val(0);
+					$('#volatilityMinRange').text(0);
+					$('#volatilityMaxRange').text(0);
 					setTimeout(function(){self.workRange();},15000);
 				}
 
@@ -538,6 +538,8 @@
 					window.localStorage.setItem("input.proc",$("#w-proc").val());
 					window.localStorage.setItem("input.label",$("#w-label").val());
 					window.localStorage.setItem("input.minimum",$("#minimum").val());
+					window.localStorage.setItem("input.volatilitymin",$("#volatilitymin").val());
+					window.localStorage.setItem("input.volatilitymax",$("#volatilitymax").val());
 				}
 				list += $('#pair').val() + ';';
 				list += ( parseInt($('#w-timeSliderResult').text()) || 0 ).toString() + ';';
@@ -592,14 +594,17 @@
 				var rate = $("#rate").val();
 				var proc = $("#proc").val();
 				var minimum = $('#minimum').val();
+				var volatilitymin = $('#volatilitymin').val();
+				var volatilitymax = $('#volatilitymax').val();
+				var volatilityRange = $('#volatilityMaxRange').text();
 				var reverse = $("#reverse").prop("checked");
 				var substrData = ";0";
 				if(reverse)
 					substrData = ";1";
 				$("#view").html('<table class="table"></table>');
 				if(this.sock != null){
-					console.log("send",pair+";"+findRange+";"+ viewRange +";"+ rate+";"+proc+substrData+";"+this.lastCount+";"+this.lastPrice+';'+minimum);
-					this.sock.send(pair+";"+findRange+";"+ viewRange +";"+ rate+";"+proc+substrData+";"+this.lastCount+";"+this.lastPrice+';'+minimum);
+					console.log("send",pair+";"+findRange+";"+ viewRange +";"+ rate+";"+proc+substrData+";"+this.lastCount+";"+this.lastPrice+';'+minimum+';'+volatilitymin+';'+volatilitymax+';'+volatilityRange);
+					this.sock.send(pair+";"+findRange+";"+ viewRange +";"+ rate+";"+proc+substrData+";"+this.lastCount+";"+this.lastPrice+';'+minimum+';'+volatilitymin+';'+volatilitymax+';'+volatilityRange);
 				}else {
 					console.log("error work");
 					setTimeout(function(){self.work();},500);
@@ -634,6 +639,9 @@
 					$("#w-proc").val(stor.getItem("input.proc"));
 					$("#w-label").val(stor.getItem("input.label"));
 					$("#minimum").val(stor.getItem("input.minimum"));
+					$("#volatilitymin").val(stor.getItem("input.volatilitymin"));
+					$("#volatilitymax").val(stor.getItem("input.volatilitymax"));
+
 				}
 			}
 		};
