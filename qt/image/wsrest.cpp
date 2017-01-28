@@ -370,6 +370,7 @@ void WSrest::print(int id, QVector <strTable> &sdata, ufBlock &rest, bool view){
         QStringList sts;
         QStringList stu;
         QStringList tmp;
+        QStringList dep;
         QString sta = "{}";
         //bool isPrice = false;
         if(view){
@@ -417,9 +418,13 @@ void WSrest::print(int id, QVector <strTable> &sdata, ufBlock &rest, bool view){
             }
             tmp << "{\"dtime\":\""+QString::number(tmpUserState.key())+"\", \"data\":\""+QString::number(val.range)+"::"+priceStr.join(", ")+"\"}";
         }
+        if(ireal[id].depth.length() > 0)
+            foreach (double elem, ireal[id].depth) {
+                dep << QString::number(elem);
+            }
         resp = "{\"rate\":["+stl.join(",")+"], \"tab\": ["+sts.join(",")+"],\"last\":{\"range\":"
                 +QString::number(rate[id].lastRange)+",\"asc\": "+sta+" }, \"rtables\": ["+stu.join(",")+"],\"tmp\": ["+tmp.join(",")
-                +"], \"summ\": {\"count\":"+QString::number(ireal[id].count)+",\"price\":"+QString::number(ireal[id].price)+"} }";
+                +"], \"summ\": {\"count\":"+QString::number(ireal[id].count)+",\"price\":"+QString::number(ireal[id].price)+"}, \"depth\": ["+dep.join(',')+"] }";
         pClient->sendTextMessage(resp);
     }
 }
