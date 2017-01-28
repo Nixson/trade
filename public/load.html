@@ -328,6 +328,7 @@
 				var lastPrice = 0;
 				var cnt = 0;
 				var strView = '';
+				$('#deptList').html(sj.depth.join('<br />'));
 				//console.log(sj.tmp);
 				var sjTmp = sj.tmp.sort(function(a,b){return -1 * (a.dtime - b.dtime);});
 				var dr = [];
