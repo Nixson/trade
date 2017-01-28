@@ -479,7 +479,7 @@ void WSrest::print(int id, QVector <strTable> &sdata, ufBlock &rest, bool view){
                 QString position = "<";
                 if(elem.type)
                     position = ">";
-                dep << position+QString::number(elem.value);
+                dep << "\""+position+QString::number(elem.value)+"\"";
             }
         resp = "{\"rate\":["+stl.join(",")+"], \"tab\": ["+sts.join(",")+"],\"last\":{\"range\":"
                 +QString::number(rate[id].lastRange)+",\"asc\": "+sta+" }, \"rtables\": ["+stu.join(",")+"],\"tmp\": ["+tmp.join(",")
