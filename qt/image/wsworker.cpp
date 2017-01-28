@@ -11,7 +11,6 @@ WsWorker::WsWorker(QObject *parent) : QObject(parent), last(0)
     connect(m_pWebSocketServer, &QWebSocketServer::newConnection, this, &WsWorker::onNewConnection);
     connect(m_pWebSocketServer, &QWebSocketServer::closed, this, &WsWorker::closed);
     std::cout << "listen WsWorker 5603" << std::endl;
-
 }
 WsWorker::~WsWorker(){
     m_pWebSocketServer->close();
@@ -150,11 +149,15 @@ void WsWorker::response(iTask *step, iTaskResult *result){
         goodStep->PeriodStart =current.toTime_t();
         goodStep->perc = 0;
         goodStep->rate = 0;
+        badStep->max = 0;
+        badStep->min = 0;
 
         iTask *badStep = new iTask();
         badStep->PeriodStart =current.toTime_t();
         badStep->perc = 0;
         badStep->rate = 0;
+        badStep->max = 0;
+        badStep->min = 0;
 
         bool find = false;
         bool findReverse = false;
@@ -219,6 +222,8 @@ void WsWorker::response(iTask *step, iTaskResult *result){
                 msg = "{\"dtime\":"+QString::number((int)currentInt)
                         +",\"perc\":"+QString::number((int)goodStep->perc)
                         +",\"rate\":"+QString::number((int)goodStep->rate)
+                        +",\"min\":"+QString::number(goodStep->min)
+                        +",\"max\":"+QString::number(goodStep->max)
                         +",\"reverse\": 0"
                         +",\"good\":\""+QString::number(good)+"\",\"bad\":\""+QString::number(bad)+"\"}";
             }
@@ -227,6 +232,8 @@ void WsWorker::response(iTask *step, iTaskResult *result){
                 msg = "{\"dtime\":"+QString::number((int)currentInt)
                         +",\"perc\":"+QString::number((int)badStep->perc)
                         +",\"rate\":"+QString::number((int)badStep->rate)
+                        +",\"min\":"+QString::number(badStep->min)
+                        +",\"max\":"+QString::number(badStep->max)
                         +",\"reverse\": 1"
                         +",\"good\":\""+QString::number(good)+"\",\"bad\":\""+QString::number(bad)+"\"}";
             }

@@ -42,12 +42,16 @@ typedef struct iTask_struct {
     uint PeriodStop;
     float rate;
     float perc;
+    double min;
+    double max;
 } iTask;
 
 typedef struct iTaskResult_struct {
     uint lost;
     uint bad;
     uint good;
+    double min;
+    double max;
 } iTaskResult;
 
 
