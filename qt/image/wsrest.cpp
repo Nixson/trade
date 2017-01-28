@@ -453,6 +453,16 @@ void WSrest::processTextMessage(QString message)
 
             ireal[idusersocs].count = rsp[6].toInt();
             ireal[idusersocs].price = rsp[7].toFloat();
+            ireal[idusersocs].volatilitymin = rsp[9].toDouble();
+            ireal[idusersocs].volatilitymax = rsp[10].toDouble();
+            ireal[idusersocs].volatilityRange = rsp[11].toDouble();
+            QStringList depthList = rsp[12].split(":");
+            if(depthList.length() > 0){
+                foreach (QString depth, depthList) {
+                    if(depth.length() > 0)
+                        ireal[idusersocs].depth.append(depth.toDouble());
+                }
+            }
         }
         catch(...){}
         rate[idusersocs].rateFloat = (float)rate[idusersocs].rate;

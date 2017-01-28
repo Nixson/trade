@@ -33,6 +33,10 @@ typedef struct iRate_str {
 typedef struct iReal_str {
     int count;
     float price;
+    double volatilitymin;
+    double volatilitymax;
+    double volatilityRange;
+    QList<double> depth;
 } iReal;
 
 typedef struct iTask_struct {
