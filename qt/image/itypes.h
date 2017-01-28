@@ -30,13 +30,18 @@ typedef struct iRate_str {
     bool  reverse;
 } iRate;
 
+typedef struct trDepth_str {
+    bool type;
+    double value;
+} trDepth;
+
 typedef struct iReal_str {
     int count;
     float price;
     double volatilitymin;
     double volatilitymax;
     double volatilityRange;
-    QList<double> depth;
+    QList<trDepth> depth;
 } iReal;
 
 typedef struct iTask_struct {

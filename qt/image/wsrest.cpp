@@ -109,6 +109,8 @@ void WSrest::updTmpTable(int id, QVector <tmpTable> &tt,  ufBlock &rest){
     //std::cout << "tt.size: " << tt.size() << std::endl;
     tt.clear();
     //std::cout << "tt.size: " << tt.size() << std::endl;
+    double zCmin = ireal[id].volatilityRange/ireal[id].volatilitymin;
+    double zCmax = ireal[id].volatilityRange/ireal[id].volatilitymax;
     for (auto i = tmpUser[id].begin(); i != tmpUser[id].end(); ++i){
         bool isLast = false;
         infoBlock info = i.value();
@@ -130,15 +132,64 @@ void WSrest::updTmpTable(int id, QVector <tmpTable> &tt,  ufBlock &rest){
                 pos = '<';
             else
                 pos = '=';
+            if(isLast && ireal[id].depth.length() > 0){
+                double depthRespMax = (double)price - zCmax;
+                double depthRespMin = (double)price + zCmin;
+                if(rate[id].reverse){
+                    depthRespMax = (double)price - zCmin;
+                    depthRespMin = (double)price + zCmax;
+                }
+                for(int positionTrDep = 0; positionTrDep < ireal[id].depth.size(); ++positionTrDep) {
+                    trDepth element = ireal[id].depth.at(positionTrDep);
+                    if(element.type){
+                        // была покупка
+                        if(depthRespMax >= element.value || depthRespMin <= element.value){
+                            //продаем в плюс                //продаем в минус
+                            ireal[id].count--;
+                            ireal[id].price += price;
+                            ireal[id].depth.removeAt(positionTrDep);
+                            --positionTrDep;
+                            strResponse rsp;
+                            rsp.dtime = info.dtime;
+                            rsp.price = price;
+                            rsp.range = info.range;
+                            rsp.diffR = 0.0;
+                            rsp.diffM = std::abs(rsp.price - rate[id].lastPrice);
+                            rangeUser[id].append(rsp);
+                        }
+                    }
+                    else {
+                        // была продажа
+                        if(depthRespMax >= element.value || depthRespMin <= element.value){
+                            //покупаем в минус                //покупаем в плюс
+                            ireal[id].count--;
+                            ireal[id].price -= price;
+                            ireal[id].depth.removeAt(positionTrDep);
+                            --positionTrDep;
+                            strResponse rsp;
+                            rsp.dtime = info.dtime;
+                            rsp.price = price;
+                            rsp.range = info.range;
+                            rsp.diffR = 0.0;
+                            rsp.diffM = std::abs(rsp.price - rate[id].lastPrice);
+                            rangeUser[id].append(rsp);
+                        }
+                    }
+                    ++positionTrDep;
+
+                }
+
+            }
 
             if(isLast && (pos=='>' || pos=='<')){
                 if(lastAsc.contains(id)){
                     if(info.range >= lastAsc[id].min && info.range <= lastAsc[id].max){
-
+                        trDepth trD;
                         strResponse rsp;
                         rsp.dtime = info.dtime;
                         rsp.price = price;
                         rsp.range = info.range;
+                        rsp.diffR = 0.0;
                         if(lastAsc[id].pos==pos){
                             rsp.response = true;
                         }
@@ -147,30 +198,35 @@ void WSrest::updTmpTable(int id, QVector <tmpTable> &tt,  ufBlock &rest){
                         }
                         if(rate[id].reverse)
                             rsp.response = !rsp.response;
-                        rsp.diffR = 0.0;
                         if(lastAsc[id].pos=='>'){
                             if(rate[id].reverse){
+                                trD.type = false;
                                 ireal[id].count--;
                                 ireal[id].price += price;
                             }
                             else {
+                                trD.type = true;
                                 ireal[id].count++;
                                 ireal[id].price -= price;
                             }
                         }
                         else {
                             if(rate[id].reverse){
+                                trD.type = true;
                                 ireal[id].count++;
                                 ireal[id].price -= price;
                             }
                             else {
+                                trD.type = false;
                                 ireal[id].count--;
                                 ireal[id].price += price;
                             }
                         }
+                        trD.value = price;
                         std::cout << "tr: " << lastAsc[id].pos << " " << pos << rate[id].reverse << rsp.response << std::endl;
                         rsp.diffM = std::abs(rsp.price - rate[id].lastPrice);
-                            rangeUser[id].append(rsp);
+                        rangeUser[id].append(rsp);
+                        ireal[id].depth.append(trD);
                         lastAsc.remove(id);
                     }
                 }
@@ -419,8 +475,11 @@ void WSrest::print(int id, QVector <strTable> &sdata, ufBlock &rest, bool view){
             tmp << "{\"dtime\":\""+QString::number(tmpUserState.key())+"\", \"data\":\""+QString::number(val.range)+"::"+priceStr.join(", ")+"\"}";
         }
         if(ireal[id].depth.length() > 0)
-            foreach (double elem, ireal[id].depth) {
-                dep << QString::number(elem);
+            foreach (trDepth elem, ireal[id].depth) {
+                QString position = "<";
+                if(elem.type)
+                    position = ">";
+                dep << position+QString::number(elem);
             }
         resp = "{\"rate\":["+stl.join(",")+"], \"tab\": ["+sts.join(",")+"],\"last\":{\"range\":"
                 +QString::number(rate[id].lastRange)+",\"asc\": "+sta+" }, \"rtables\": ["+stu.join(",")+"],\"tmp\": ["+tmp.join(",")
@@ -464,8 +523,14 @@ void WSrest::processTextMessage(QString message)
             QStringList depthList = rsp[12].split(":");
             if(depthList.length() > 0){
                 foreach (QString depth, depthList) {
-                    if(depth.length() > 0)
-                        ireal[idusersocs].depth.append(depth.toDouble());
+                    if(depth.length() > 0){
+                        trDepth trD;
+                        trD.type = false;
+                        if(depth.left(1)==">")
+                            trD.type = true;
+                        trD.value = depth.mid(1).toDouble();
+                        ireal[idusersocs].depth.append(trD);
+                    }
                 }
             }
         }
