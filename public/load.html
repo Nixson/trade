@@ -292,8 +292,8 @@
 					$("#findRange").val(data.dtime);
 					$("#rate").val(data.rate);
 					$("#proc").val(data.perc);
-					$('#volatilityMinRange').text(data.max - data.min);
-					$('#volatilityMaxRange').text(data.max - data.min);
+					$('#volatilityMinRange').text((data.max - data.min).toFixed(2));
+					$('#volatilityMaxRange').text((data.max - data.min).toFixed(2));
 					setTimeout(function(){self.work();},3000);
 				}
 				else {
