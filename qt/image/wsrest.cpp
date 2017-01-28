@@ -162,7 +162,7 @@ void WSrest::updTmpTable(int id, QVector <tmpTable> &tt,  ufBlock &rest){
                         // была продажа
                         if(depthRespMax >= element.value || depthRespMin <= element.value){
                             //покупаем в минус                //покупаем в плюс
-                            ireal[id].count--;
+                            ireal[id].count++;
                             ireal[id].price -= price;
                             ireal[id].depth.removeAt(positionTrDep);
                             --positionTrDep;
