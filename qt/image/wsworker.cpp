@@ -149,8 +149,8 @@ void WsWorker::response(iTask *step, iTaskResult *result){
         goodStep->PeriodStart =current.toTime_t();
         goodStep->perc = 0;
         goodStep->rate = 0;
-        badStep->max = 0;
-        badStep->min = 0;
+        goodStep->max = 0;
+        goodStep->min = 0;
 
         iTask *badStep = new iTask();
         badStep->PeriodStart =current.toTime_t();
