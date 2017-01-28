@@ -328,7 +328,7 @@
 				var lastPrice = 0;
 				var cnt = 0;
 				var strView = '';
-				$('#deptList').html(sj.depth.join('<br />'));
+				$('#deptList').html(sj.depth.join(';<br />'));
 				//console.log(sj.tmp);
 				var sjTmp = sj.tmp.sort(function(a,b){return -1 * (a.dtime - b.dtime);});
 				var dr = [];
@@ -600,10 +600,10 @@
 				var volatilitymin = $('#volatilitymin').val();
 				var volatilitymax = $('#volatilitymax').val();
 				var volatilityRange = $('#volatilityMaxRange').text();
-				var deptList = $('#deptList').html();
+				var deptList = $('#deptList').text();
 				var depth = '';
 				if(deptList.length > 0) {
-					depth = deptList.split('<br />').join(':');
+					depth = deptList.split(';').join(':');
 				}
 				var reverse = $("#reverse").prop("checked");
 				var substrData = ";0";
