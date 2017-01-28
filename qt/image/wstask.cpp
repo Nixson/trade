@@ -146,8 +146,9 @@ void WsTask::getLastTrades(uint pos){
 }
 
 void WsTask::getMax(){
+    float minP = 0.0;
+    float maxP = 0.0;
     float max = 0.0;
-    float min = 0.0;
     for(auto iter = trade.cbegin();iter!=trade.cend();  ++iter){
         if(!iter.value().contains(step->type))
             continue;
@@ -155,13 +156,15 @@ void WsTask::getMax(){
         foreach (iTrade tradeElement, td) {
             if(tradeElement.amount > max)
                 max = tradeElement.amount;
-            if(min < 0.01 || tradeElement.amount < min)
-                min = tradeElement.amount;
+            if(tradeElement.price > maxP)
+                maxP = tradeElement.price;
+            if(minP < 0.01 || tradeElement.price < minP)
+                minP = tradeElement.price;
         }
     }
     stepRate *=max;
-    result->min = (double)min;
-    result->max = (double)max;
+    result->min = (double)minP;
+    result->max = (double)maxP;
     step->min = result->min;
     step->max = result->max;
 }
