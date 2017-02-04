@@ -21,7 +21,8 @@ SOURCES += itypes.cpp \
     memory.cpp \
     rdata.cpp \
     wsworker.cpp \
-    wstask.cpp
+    wstask.cpp \
+    nxlogger.cpp
 
 HEADERS += itypes.h \
     depth.h \
@@ -33,4 +34,5 @@ HEADERS += itypes.h \
     memory.h \
     rdata.h \
     wsworker.h \
-    wstask.h
+    wstask.h \
+    nxlogger.h
