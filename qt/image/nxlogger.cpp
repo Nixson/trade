@@ -14,8 +14,7 @@ NxLogger::NxLogger(QObject *parent) : QObject(parent)
 }
 
 void NxLogger::echo(QString info){
-    QDateTime dt;
-    data << dt.toString("yyyy.MM.dd hh:mm:ss.zzz") + " " + info;
+    data << QDateTime::currentDateTime().toString("yyyy.MM.dd hh:mm:ss.zzz") + " " + info;
 }
 
 void NxLogger::update(){
