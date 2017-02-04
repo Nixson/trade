@@ -22,11 +22,11 @@ void NxLogger::update(){
         return;
     QStringList sub = data;
     data.clear();
-    QFileInfo fi(logDir+"info.log");
+    QFileInfo fi(logDir+"info.txt");
     if(fi.exists() && fi.size() > 1048576) {
         remove(1);
     }
-    QFile log(logDir+"info.log");
+    QFile log(logDir+"info.txt");
     log.open(QIODevice::Append | QIODevice::Text);
     QByteArray ba;
     foreach (QString line, sub) {
@@ -36,13 +36,13 @@ void NxLogger::update(){
     log.close();
 }
 void NxLogger::remove(int number){
-    QFile log(logDir+"info"+QString::number(number)+".log");
+    QFile log(logDir+"info"+QString::number(number)+".txt");
     if(number < 10){
         QFileInfo fi(log);
         if(fi.exists()){
             remove(number+1);
         }
-        log.rename(logDir+"info"+QString::number(number+1)+".log");
+        log.rename(logDir+"info"+QString::number(number+1)+".txt");
         return;
     }
     log.remove();
