@@ -143,8 +143,11 @@ void WSrest::updTmpTable(int id, QVector <tmpTable> &tt,  ufBlock &rest){
                     trDepth element = ireal[id].depth.at(positionTrDep);
                     if(element.type){
                         // была покупка
-                        if(depthRespMax >= element.value || depthRespMin <= element.value){
-                            //продаем в плюс                //продаем в минус
+                        if(ireal[id].volatility > 0 &&
+                                (ireal[id].volatility == 1 ||
+                                    (depthRespMax >= element.value || depthRespMin <= element.value)
+                                 )
+                             ){     //продаем в плюс                //продаем в минус
                             ireal[id].count--;
                             ireal[id].price += price;
                             ireal[id].depth.removeAt(positionTrDep);
@@ -160,8 +163,11 @@ void WSrest::updTmpTable(int id, QVector <tmpTable> &tt,  ufBlock &rest){
                     }
                     else {
                         // была продажа
-                        if(depthRespMax >= element.value || depthRespMin <= element.value){
-                            //покупаем в минус                //покупаем в плюс
+                        if(ireal[id].volatility > 0 &&
+                                (ireal[id].volatility == 1 ||
+                                    (depthRespMax >= element.value || depthRespMin <= element.value)
+                                 )
+                            ){      //покупаем в минус                //покупаем в плюс
                             ireal[id].count++;
                             ireal[id].price -= price;
                             ireal[id].depth.removeAt(positionTrDep);
@@ -520,6 +526,7 @@ void WSrest::processTextMessage(QString message)
             ireal[idusersocs].volatilitymin = rsp[9].toDouble();
             ireal[idusersocs].volatilitymax = rsp[10].toDouble();
             ireal[idusersocs].volatilityRange = rsp[11].toDouble();
+            ireal[idusersocs].volatility = rsp[12].toInt();
             QStringList depthList = rsp[12].split(":");
             if(depthList.length() > 0){
                 foreach (QString depth, depthList) {

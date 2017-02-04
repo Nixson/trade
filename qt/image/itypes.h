@@ -36,11 +36,12 @@ typedef struct trDepth_str {
 } trDepth;
 
 typedef struct iReal_str {
-    int count;
-    float price;
-    double volatilitymin;
-    double volatilitymax;
-    double volatilityRange;
+    int         count;
+    float       price;
+    double      volatilitymin;
+    double      volatilitymax;
+    double      volatilityRange;
+    int         volatility;
     QList<trDepth> depth;
 } iReal;
 

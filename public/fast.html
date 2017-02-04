@@ -563,6 +563,7 @@
 					window.localStorage.setItem("input.minimum",$("#minimum").val());
 					window.localStorage.setItem("input.volatilitymin",$("#volatilitymin").val());
 					window.localStorage.setItem("input.volatilitymax",$("#volatilitymax").val());
+					window.localStorage.setItem("input.volatility",$(".volatility:checked").val());
 				}
 				list += $('#pair').val() + ';';
 				list += ( parseInt($('#w-timeSliderResult').text()) || 0 ).toString() + ';';
@@ -620,6 +621,7 @@
 				var volatilitymin = $('#volatilitymin').val();
 				var volatilitymax = $('#volatilitymax').val();
 				var volatilityRange = $('#volatilityMaxRange').text();
+				var volatility = $(".volatility:checked").val();
 				var deptList = $('#deptList').text();
 				var depth = '';
 				if(deptList.length > 0) {
@@ -631,8 +633,8 @@
 					substrData = ";1";
 				$("#view").html('<table class="table"></table>');
 				if(this.sock != null){
-					console.log("send",pair+";"+findRange+";"+ viewRange +";"+ rate+";"+proc+substrData+";"+this.lastCount+";"+this.lastPrice+';'+minimum+';'+volatilitymin+';'+volatilitymax+';'+volatilityRange+';'+depth);
-					this.sock.send(pair+";"+findRange+";"+ viewRange +";"+ rate+";"+proc+substrData+";"+this.lastCount+";"+this.lastPrice+';'+minimum+';'+volatilitymin+';'+volatilitymax+';'+volatilityRange+';'+depth);
+					console.log("send",pair+";"+findRange+";"+ viewRange +";"+ rate+";"+proc+substrData+";"+this.lastCount+";"+this.lastPrice+';'+minimum+';'+volatilitymin+';'+volatilitymax+';'+volatilityRange+';'+volatility+';'+depth);
+					this.sock.send(pair+";"+findRange+";"+ viewRange +";"+ rate+";"+proc+substrData+";"+this.lastCount+";"+this.lastPrice+';'+minimum+';'+volatilitymin+';'+volatilitymax+';'+volatilityRange+';'+volatility+';'+depth);
 				}else {
 					console.log("error work");
 					setTimeout(function(){self.work();},500);
