@@ -16,3 +16,4 @@ Thumbs.db
 *.exe
 *.pro.user*
 qt/image/image
+*.log
