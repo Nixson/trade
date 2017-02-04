@@ -18,6 +18,7 @@ signals:
     void closed();
     void getMaxTrades(int id, QString &dep, uint FindPeriod, uint ViewPeriod, uint rate);
     void getLastTrades(int id, QString &dep, uint period, float rate);
+    void echo(QString);
 
 public slots:
     void onNewConnection();

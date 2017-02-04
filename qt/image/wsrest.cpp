@@ -133,15 +133,19 @@ void WSrest::updTmpTable(int id, QVector <tmpTable> &tt,  ufBlock &rest){
             else
                 pos = '=';
             if(isLast && ireal[id].depth.length() > 0){
+                emit echo("Последний. Ожиданий фиксаций: "+QString::number(ireal[id].depth.length()));
                 double depthRespMax = (double)price - zCmax;
                 double depthRespMin = (double)price + zCmin;
                 if(rate[id].reverse){
                     depthRespMax = (double)price - zCmin;
                     depthRespMin = (double)price + zCmax;
                 }
+                emit echo("Порог фиксации верхний: "+QString::number(depthRespMax));
+                emit echo("Порог фиксации нижний : "+QString::number(depthRespMin));
                 for(int positionTrDep = 0; positionTrDep < ireal[id].depth.size(); ++positionTrDep) {
                     trDepth element = ireal[id].depth.at(positionTrDep);
                     if(element.type){
+                        emit echo("Фиксация. Покупка: "+QString::number(element.value));
                         // была покупка
                         if(ireal[id].volatility > 0 &&
                                 (ireal[id].volatility == 1 ||
@@ -162,6 +166,7 @@ void WSrest::updTmpTable(int id, QVector <tmpTable> &tt,  ufBlock &rest){
                         }
                     }
                     else {
+                        emit echo("Фиксация. Продажа: "+QString::number(element.value));
                         // была продажа
                         if(ireal[id].volatility > 0 &&
                                 (ireal[id].volatility == 1 ||
@@ -189,6 +194,9 @@ void WSrest::updTmpTable(int id, QVector <tmpTable> &tt,  ufBlock &rest){
 
             if(isLast && (pos=='>' || pos=='<')){
                 if(lastAsc.contains(id)){
+                    emit echo("Ожидание. Диапазон: "+QString::number(info.range));
+                    emit echo("Ожидание. Максимум: "+QString::number(lastAsc[id].min));
+                    emit echo("Ожидание. Минимум : "+QString::number(lastAsc[id].max));
                     if(info.range >= lastAsc[id].min && info.range <= lastAsc[id].max){
                         trDepth trD;
                         strResponse rsp;

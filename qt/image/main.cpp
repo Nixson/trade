@@ -12,6 +12,7 @@
 #include "worker.h"
 #include "wsrest.h"
 #include "wsworker.h"
+#include "nxlogger.h"
 
 Q_DECLARE_METATYPE(iDepth)
 Q_DECLARE_METATYPE(iDepth*)
@@ -39,6 +40,7 @@ int wok (int argc, char *argv[]){
     QThread *restThread = new QThread;
     QThread *wrestThread = new QThread;
     QThread *wworkThread = new QThread;
+    NxLogger *logger = new NxLogger;
     Worker *work = new Worker();
     Rest *rest = new Rest();
     Depth *dep = new Depth();
@@ -51,6 +53,7 @@ int wok (int argc, char *argv[]){
     QObject::connect(rest,&Rest::getMaxTrades,tr,&Trades::getMax);
     QObject::connect(ws,&WSrest::getMaxTrades,tr,&Trades::getMaxWs);
     QObject::connect(ws,&WSrest::getLastTrades,dep,&Depth::getLastWs);
+    QObject::connect(ws,&WSrest::echo,logger,&NxLogger::echo);
 
     QObject::connect(work,&Worker::response,rest,&Rest::response);
     QObject::connect(tr,&Trades::setMax,dep,&Depth::getMax);
