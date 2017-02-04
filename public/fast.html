@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>График</title>
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet" />
+    <link href="/js/jquery-ui.min.css" rel="stylesheet" />
+
+    <link rel="shortcut icon" href="/favicon.png">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+  <div class="container">
+  <div class="row">
+  	<div class="col-sm-6">
+  		<h1>Параметры поиска</h1>
+  		<form onsubmit="ws.workRange(); return false;">
+	  		<div class="form-group">
+		  		<div class="row">
+		  			<div class="col-sm-8">
+					    <label for="w-timeSlider">Временной диапазон поиска: </label>&nbsp;<span id="w-timeSliderResult"></span>
+			  			<div id="w-timeSlider"></div>
+		  			</div>
+		  			<div class="col-sm-4">
+					    <label for="w-time">Шаг поиска: </label>
+		  				<input type="number" class="form-control" id="w-time" required min="2" />
+		  			</div>
+		  		</div>
+	  		</div>
+
+	  		<div class="form-group">
+		  		<div class="row">
+		  			<div class="col-sm-8">
+					    <label for="w-rateSlider">Коэффициент: </label>&nbsp;<span id="w-rateSliderResultIn">1</span> - <span id="w-rateSliderResultOut">10</span>
+			  			<div id="w-rateSlider"></div>
+		  			</div>
+		  			<div class="col-sm-4">
+					    <label for="w-rate">Шаг: </label>
+		  				<input type="number" class="form-control" id="w-rate" required min="2"/>
+		  			</div>
+		  		</div>
+	  		</div>
+	  		<div class="form-group">
+		  		<div class="row">
+		  			<div class="col-sm-8">
+					    <label for="w-procSlider">Процент реакции: </label>&nbsp;<span id="w-procSliderResultIn">1</span> - <span id="w-procSliderResultOut">50</span>
+			  			<div id="w-procSlider"></div>
+		  			</div>
+		  			<div class="col-sm-4">
+					    <label for="w-proc">Шаг: </label>
+		  				<input type="number" class="form-control" id="w-proc" required min="2" />
+		  			</div>
+		  		</div>
+	  		</div>
+	  		<div class="form-group">
+		  		<div class="row">
+		  			<div class="col-sm-8">
+					    <label for="w-label">Порог срабатывания: </label>
+		  				<input type="number" class="form-control" id="w-label" required min="1.1" step="0.1" />
+		  			</div>
+		  		</div>
+		  	</div>
+			<div class="row">
+				<div class="col-xs-6">
+					<button type="button" class="btn btn-default" onclick="ws.workRange();">Запуск</button>
+				</div>
+				<div class="col-xs-6 text-right">
+					<button type="button" class="btn btn-danger" onclick="ws.closeRange();">Остановить</button>
+				</div>
+			</div>
+		</form>
+		<br /><br />
+			<div class="row">
+				<div class="col-xs-3">
+					<div id="dtime"></div>
+				</div>
+				<div class="col-xs-3">
+					<div id="dInterval"></div>
+				</div>
+				<div class="col-xs-3">
+					<div id="good"></div>
+				</div>
+				<div class="col-xs-3">
+					<div id="bad"></div>
+				</div>
+			</div>
+
+
+  	</div>
+  	<div class="col-sm-6">
+		  	<h1>Параметры продажи</h1>
+		  	<form class="form">
+		  <div class="form-group">
+		    <label for="pair">Пара: </label>
+		    <select id="pair" class="form-control">
+		    	<option value="btc_usd">btc_usd</option>
+		    </select>
+		  </div>
+		  <div class="form-group">
+		    <label for="findRange"> Диапазон поиска максимума сделки: </label>
+		    <input type="number" class="form-control" id="findRange" placeholder="В секундах">
+		  </div>
+		  <div class="form-group">
+		    <label for="rate"> Коэффициент: </label>
+		    <input type="number" class="form-control" id="rate" placeholder="d1">
+		  </div>
+		  <div class="form-group">
+		    <label for="rate"> Процент реакции: </label>
+		    <input type="number" class="form-control" id="proc" placeholder="">
+		  </div>
+		  <div class="form-group">
+		    <label for="rate"> Минимум продаж в стакане: </label>
+		    <input type="number" class="form-control" id="minimum" placeholder="">
+		  </div>
+		  <div class="form-group">
+		  <div class="row">
+		  	<div class="col-xs-4">
+		  		<div class="radio">
+		  			<label>
+		  				<input type="radio" name="volatility" value="0" id="volatility">
+		  				Нет фиксации
+		  			</label>
+		  		</div>
+		  		<div class="radio">
+		  			<label>
+		  				<input type="radio" name="volatility" value="0" id="volatility">
+		  				Быстрая фиксация
+		  			</label>
+		  		</div>
+		  		<div class="radio">
+		  			<label>
+		  				<input type="radio" name="volatility" value="0" id="volatility">
+		  				Фиксация по границе
+		  			</label>
+		  		</div>
+		    </div>
+		  	<div class="col-xs-4">
+			    <label for="rate"> Фиксация убытка: </label>
+			    <div class="input-group">
+				    <div class="input-group-addon" id="volatilityMinRange"></div>
+				    <input type="number" class="form-control" id="volatilitymin" placeholder="">
+			    </div>
+		    </div>
+		  	<div class="col-xs-4">
+			    <label for="rate"> Фиксация прибыли: </label>
+			    <div class="input-group">
+				    <div class="input-group-addon" id="volatilityMaxRange"></div>
+				    <input type="number" class="form-control" id="volatilitymax" placeholder="">
+			    </div>
+		    </div>
+		  </div>
+		  </div>
+		  <div class="checkbox">
+		    <label for="reverse"><input type="checkbox" id="reverse"> Реверс</label>
+		    
+		  </div>
+		  <div class="row">
+		  	<div class="col-xs-6">
+			  <button type="button" class="btn btn-default" onclick="ws.work();">Получить</button>
+		  	</div>
+		  	<div class="col-xs-6 text-right">
+			  <button type="button" class="btn btn-danger" onclick="ws.close();">Остановить</button>
+		  	</div>
+		  </div>
+		</form>
+  	</div>
+  </div>
+
+<br />
+<div id="sTable"></div>
+<div class="row">
+	<div class="col-xs-7">
+		<div id="view"></div>
+		<div id="viewInfo"><table class="table"></table></div>
+	</div>
+	<div class="col-xs-5">
+		<h3>Счет:</h3>
+		<table class="table">
+			<tr>
+				<td>Биткоинов:</td>
+				<td id="summCount"></td>
+			</tr>
+			<tr>
+				<td>Денег:</td>
+				<td id="summPrice"></td>
+			</tr>
+		</table>
+		<div id="deptList"></div>
+		<div id="rtable"></div>
+
+	</div>
+</div>
+
+    <!--<h1>График за сутки</h1>
+  	<div class="row">
+  		<div class="col-xs-12" id="gr">
+  		</div>
+  	</div>
+  </div>-->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="/js/jquery-ui.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+	<!--<script language="javascript" type="text/javascript" src="/js/jquery.flot.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/jquery.flot.navigate.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/jquery.flot.time.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/jquery.flot.symbol.js"></script>-->
+	<script type="text/javascript">
+	var sliders = {};
+	$(function(){
+		sliders.time = $("#w-timeSlider").slider({
+			step: 3600,
+			max: 86400,
+			slide: function(event, ui){
+				$("#w-timeSliderResult").text(ui.value);
+				if( typeof window.localStorage != 'undefined')
+					window.localStorage.setItem("sliders.time",ui.value);
+			}
+		});
+		sliders.rate = $("#w-rateSlider").slider({
+			step: 1,
+			max: 50,
+			range: true,
+			values: [1,10],
+			slide: function(event, ui){
+				$("#w-rateSliderResultIn").text(ui.values[0]);
+				$("#w-rateSliderResultOut").text(ui.values[1]);
+				if( typeof window.localStorage != 'undefined'){
+					window.localStorage.setItem("sliders.rateIn",ui.values[0]);
+					window.localStorage.setItem("sliders.rateOut",ui.values[1]);
+				}
+			}
+		});
+		sliders.proc = $("#w-procSlider").slider({
+			step: 1,
+			max: 50,
+			range: true,
+			values: [1,50],
+			slide: function(event, ui){
+				$("#w-procSliderResultIn").text(ui.values[0]);
+				$("#w-procSliderResultOut").text(ui.values[1]);
+				if( typeof window.localStorage != 'undefined'){
+					window.localStorage.setItem("sliders.procIn",ui.values[0]);
+					window.localStorage.setItem("sliders.procOut",ui.values[1]);
+				}
+			}
+		});
+	});
+	var wsock = function(){
+		socket = {
+			lastCount: 0,
+			lastPrice: 0.0,
+			sock: null,
+			range: null,
+			build: function(){
+				var self = this;
+				self.sock = new WebSocket("ws://tradeintellect.ru/ws");
+				self.sock.onopen = function(){console.log("ws connect");};
+				self.sock.onclose = function(){console.log("ws onclose"); self.sock = null; setTimeout(function(){self.build();},2000);};
+				self.sock.onmessage = function(msg){self.onmessage(msg);};
+				return this;
+			},
+			buildRange: function(){
+				var self = this;
+				self.range = new WebSocket("ws://tradeintellect.ru/convert");
+				self.range.onopen = function(){console.log("convert connect");};
+				self.range.onclose = function(){console.log("convert onclose"); self.range = null; setTimeout(function(){self.buildRange();},2000);};
+				self.range.onmessage = function(msg){self.onmessageRange(msg);};
+			},
+			reWork: function(){
+				var self = this;
+				setTimeout(function(){
+					if(self.sock != null)
+						self.work();
+					else
+						self.reWork();
+				},500);
+			},
+			resultG: 0,
+			resultR: 0,
+			resultGtmp:0,
+			resultRtmp:0,
+			onload: false,
+			onmessageRange: function(msg){
+				this.onload = false;
+				console.log(msg.data);
+				var self = this;
+				var stimer = Date.now();
+				var data = JSON.parse(msg.data);
+				$("#dtime").text( ((stimer - this.stimer)/1000 ).toFixed(2) + "сек." );
+				$("#good").text(data.good);
+				$("#bad").text(data.bad);
+				$("#reverse").prop("checked",data.reverse);
+
+				this.close();
+				this.range.close();
+
+				console.log(this.resultG,this.resultGtmp);
+				this.resultG += this.resultGtmp;
+				this.resultR += this.resultRtmp;
+				this.resultGtmp = 0;
+				this.resultRtmp = 0;
+				console.log(this.resultG,this.resultGtmp);
+				if(data.dtime > 0){
+					$("#findRange").val(data.dtime);
+					$("#rate").val(data.rate);
+					$("#proc").val(data.perc);
+					$('#volatilityMinRange').text((data.max - data.min).toFixed(2));
+					$('#volatilityMaxRange').text((data.max - data.min).toFixed(2));
+					setTimeout(function(){self.work();},3000);
+				}
+				else {
+					$("#findRange").val(0);
+					$("#rate").val(0);
+					$("#proc").val(0);
+					$('#volatilityMinRange').text(0);
+					$('#volatilityMaxRange').text(0);
+					setTimeout(function(){self.workRange();},15000);
+				}
+
+				/*try {
+					var sj = JSON.parse(msg.data);
+					var findRange = $("#findRange").val(sj.time);
+					var viewRange = $("#findRange").val(sj.time);
+					var rate = $("#rate").val(sj.rate);
+					var proc = $("#proc").val(sj.proc);
+					self.reWork();
+				}
+				catch(err){
+					console.log(onmessageRange,msg);
+				}*/
+			},
+			onmessage: function(msg){
+				var sj = JSON.parse(msg.data);
+				this.lastCount = sj.summ.count;
+				this.lastPrice = sj.summ.price;
+				$("#summCount").text(this.lastCount);
+				$("#summPrice").text(this.lastPrice.toFixed(3));
+				//console.log("socket onmessage");
+				var JR = sj.rate;
+				var lastPrice = 0;
+				var cnt = 0;
+				var strView = '';
+				$('#deptList').html(sj.depth.join(';<br />'));
+				//console.log(sj.tmp);
+				var sjTmp = sj.tmp.sort(function(a,b){return -1 * (a.dtime - b.dtime);});
+				var dr = [];
+				var last = 0;
+				var sjTmpLen = sjTmp.length;
+				if(sjTmpLen > 32)
+					sjTmpLen = 32;
+				var infodata = sjTmp[sjTmpLen-1].data;
+				var splData = infodata.split('::');
+				var infodatas = splData[1].split(',');
+				last = parseFloat(infodatas[infodatas.length - 1]);
+				var dataTmpR = [];
+				var dataTmp = [];
+				for(var el in sj.tmp){
+					if(el > 30)
+						break;
+					dataTmpR.push(sj.tmp[el]);
+				}
+				dataTmp = dataTmpR;//.reverse();
+				for(var el in dataTmp){
+					var date = new Date(dataTmp[el].dtime*1000);
+					var spl = sj.tmp[el].data.split('::');
+					var prices = spl[1].split(',');
+					var str = '<tr><td>'+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds()+'</td>';
+						str+='<td>'+spl[0]+'</td>';
+						str+='<td>'+spl[1]+'</td></tr>';
+					/*for(var num in prices){
+						var price = parseFloat(prices[num]);
+						if(price > last){
+							str+='<td>'+price+' &#8593;</td>';
+						}
+						else if(price < last){
+							str+='<td>'+price+' &#8595;</td>';
+						}
+						else
+							str+='<td>'+price+' =</td></tr>';
+						dr.push(str);
+						last = price;
+					}*/
+						dr.push(str);
+				}
+				$("#viewInfo table").html(dr.join(''));
+				JR = JR.sort(function(a,b) { return -1 * (a.dtime - b.dtime);});
+				if(JR.length > 0 && typeof JR[0].dtime!='undefined'){
+				var date = new Date(JR[0].dtime*1000);
+						strView +='<tr><td>';
+						strView+= date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+						strView +='</td><td>';
+						strView +=JR[0].asks;
+						strView +='</td><td>';
+						strView +=JR[0].bids;
+						strView +='</td><td>';
+						strView += JR[0].range;
+						strView +='</td><td>';
+						strView += JR[0].price;
+						strView +='</td><td></tr>';
+					$("#view table").html(strView);
+				}
+				/*console.log(JR[0],JR[JR.length-1]);
+				for(var str in JR){
+					var date = new Date(JR[str].dtime*1000);
+					var bLine = JR[str].price.split(',');
+					if(cnt > 0)
+						break;
+					for(var lNum in bLine){
+						var pos = "";
+						if(bLine[lNum]!=''){
+							var Price = parseFloat(bLine[lNum]);
+							if(Price > lastPrice)
+								pos = ">";
+							else if(Price < lastPrice)
+								pos = "<";
+							else
+								pos = "=";
+							lastPrice = Price;
+						}
+						strView +='<tr><td>';
+						strView+= date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+						strView +='</td><td>';
+						strView +=JR[str].asks;
+						strView +='</td><td>';
+						strView +=JR[str].bids;
+						strView +='</td><td>';
+						strView += JR[str].range;
+						strView +='</td><td>';
+						strView +=bLine[lNum];
+						strView +='</td><td>';
+						if(pos==">")
+							strView +="&#8593;";
+						else
+							strView +="&nbsp;";
+						strView +='</td><td>';
+						if(pos=="<")
+							strView +="&#8595;";
+						else
+							strView +="&nbsp;";
+						strView +='</td><td>';
+						if(pos=="=")
+							strView +="=";
+						else
+							strView +="&nbsp;";
+						strView +='</td></tr>';
+					}
+						cnt++;
+				}*/
+
+				//tab
+				
+				var stable = "";
+				var stableData = "";
+				var stableP = "";
+				var sub = 0;
+				for(var str in sj.tab){
+					if(sub==0)
+						stable += "<td colspan='3'>"+sj.tab[str].min.toFixed(3)+" - "+sj.tab[str].max.toFixed(3)+"</td>";
+					sub++;
+					if(sub >= 3)
+						sub = 0;
+						stableP += "<td>"+sj.tab[str].pos+"</td>";
+						//stableData += "<td>"+sj.tab[str].count+"</td>";
+					if(typeof sj.last.range!='undefined' && sj.last.range >= sj.tab[str].min && sj.last.range <= sj.tab[str].max){
+						var has = true;
+						if(typeof sj.last.asc!='undefined'){
+							if(sj.last.asc.min >= sj.tab[str].min && sj.last.asc.max <= sj.tab[str].max && sj.last.asc.pos==sj.tab[str].pos){
+								stableData += "<td style='background:#005500; color: #fff;'>"+sj.tab[str].count+"</td>";
+								has = false;
+							}
+						}
+						if(has){
+								stableData += "<td style='background:#333; color: #fff;'>"+sj.tab[str].count+"</td>";
+						}
+
+					}
+					else{
+						var has = true;
+						if(typeof sj.last.asc!='undefined'){
+							if(sj.last.asc.min >= sj.tab[str].min && sj.last.asc.max <= sj.tab[str].max && sj.last.asc.pos==sj.tab[str].pos){
+								stableData += "<td style='background:#005500; color: #fff;'>"+sj.tab[str].count+"</td>";
+								has = false;
+							}
+						}
+						if(has){
+								stableData += "<td>"+sj.tab[str].count+"</td>";
+						}
+					}
+
+				}
+				$("#sTable").html('<table class="table"><tr>'+stable+'</tr><tr>'+stableP+'</tr><tr>'+stableData+'</tr></table>');
+
+				if(typeof sj.rtables!='undefined'){
+					var resultGs = 0;
+					var resultRs = 0;
+					var cnt = 0;
+					$("#rtable").html('<table class="table"></table>');
+					/*for(var str in sj.rtables){
+						cnt++;
+					}*/
+					console.log(sj.rtables);
+					for(var str in sj.rtables){
+						var resp = "";
+						var date = new Date(sj.rtables[str].dtime*1000);
+						if(sj.rtables[str].response==1){
+							resultGs++;
+							resp +='<tr style="background: #005500; color: #ffffff;"><td>';
+						}
+						else{
+							resultRs++;
+							resp +='<tr style="background: #550000; color: #ffffff;"><td>';
+						}
+						resp+= date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+						resp +='</td><td>';
+						resp +=sj.rtables[str].price;
+						resp +='</td><td>';
+						resp +=sj.rtables[str].range;
+						resp +='</td><td>';
+						resp +=sj.rtables[str].diffM;
+						resp +='</td></tr>';
+						//if(cnt < 10)
+						$("#rtable table").prepend(resp);
+						//cnt--;
+					}
+					console.log(this.resultGtmp,this.resultG,resultGs);
+					this.resultGtmp = resultGs;
+					this.resultRtmp = resultRs;
+					resultGs+=this.resultG;
+					resultRs+=this.resultR;
+					console.log(this.resultGtmp,this.resultG,resultGs);
+					resp = '<tr><td style="background: #005500; color: #ffffff;">'+resultGs+'</td><td style="background: #550000; color: #ffffff;">'+resultRs+'</td></tr>';
+					$("#rtable table").prepend(resp);
+				}
+
+			},
+			close: function(){
+				this.sock.close();
+			},
+			closeRange: function(){
+				this.range.close();
+				this.reTimer = false;
+			},
+			stimer: 0,
+			nextRange: 600,
+			workRange: function(){
+				console.log("workRange");
+				this.stimer = Date.now();
+				var self = this;
+				var list = '';
+				if(typeof window.localStorage != 'undefined'){
+					window.localStorage.setItem("input.time",$("#w-time").val());
+					window.localStorage.setItem("input.rate",$("#w-rate").val());
+					window.localStorage.setItem("input.proc",$("#w-proc").val());
+					window.localStorage.setItem("input.label",$("#w-label").val());
+					window.localStorage.setItem("input.minimum",$("#minimum").val());
+					window.localStorage.setItem("input.volatilitymin",$("#volatilitymin").val());
+					window.localStorage.setItem("input.volatilitymax",$("#volatilitymax").val());
+				}
+				list += $('#pair').val() + ';';
+				list += ( parseInt($('#w-timeSliderResult').text()) || 0 ).toString() + ';';
+				list += ( parseInt($('#w-time').val()) || 0 ).toString() + ';';
+				list += ( parseInt($('#w-rateSliderResultIn').text()) || 0 ).toString() + ';';
+				list += ( parseInt($('#w-rateSliderResultOut').text()) || 0 ).toString() + ';';
+				list += ( parseInt($('#w-rate').val()) || 0 ).toString() + ';';
+				list += ( parseInt($('#w-procSliderResultIn').text()) || 0 ).toString() + ';';
+				list += ( parseInt($('#w-procSliderResultOut').text()) || 0 ).toString() + ';';
+				list += ( parseInt($('#w-proc').val()) || 0 ).toString()+';';
+				list += ( parseFloat($('#w-label').val()) || 1.3 ).toString();
+				console.log(list);
+				if(this.range != null){
+					this.reTimer = false;
+					this.range.send(list);
+					this.nextRange = 600;
+					this.timer = true;
+					this.onload = true;
+					this.timer = setTimeout(function(){ self.reTimer = true; self.nextTime(); },2000);
+				}
+				else {
+					setTimeout(function(){self.workRange();});
+				}
+			},
+			timer: false,
+			reTimer: false,
+			nextTime: function(){
+				var self = this;
+				if(!self.reTimer)
+					return;
+				console.log("nextTime");
+				if(this.onload){
+					$("#dtime").text("Loading");
+				}
+				self.nextRange--;
+				$("#dInterval").text(self.nextRange);
+				if(self.nextRange == 0){
+					self.timer = false;
+					self.workRange();
+				}
+				else {
+					setTimeout(function(){
+						self.nextTime();
+					},1000);
+				}
+			},
+			work: function(){
+				var self = this;
+				var pair = $("#pair").val();
+				var findRange = $("#findRange").val();
+				var viewRange = $("#findRange").val();
+				var rate = $("#rate").val();
+				var proc = $("#proc").val();
+				var minimum = $('#minimum').val();
+				var volatilitymin = $('#volatilitymin').val();
+				var volatilitymax = $('#volatilitymax').val();
+				var volatilityRange = $('#volatilityMaxRange').text();
+				var deptList = $('#deptList').text();
+				var depth = '';
+				if(deptList.length > 0) {
+					depth = deptList.split(';').join(':');
+				}
+				var reverse = $("#reverse").prop("checked");
+				var substrData = ";0";
+				if(reverse)
+					substrData = ";1";
+				$("#view").html('<table class="table"></table>');
+				if(this.sock != null){
+					console.log("send",pair+";"+findRange+";"+ viewRange +";"+ rate+";"+proc+substrData+";"+this.lastCount+";"+this.lastPrice+';'+minimum+';'+volatilitymin+';'+volatilitymax+';'+volatilityRange+';'+depth);
+					this.sock.send(pair+";"+findRange+";"+ viewRange +";"+ rate+";"+proc+substrData+";"+this.lastCount+";"+this.lastPrice+';'+minimum+';'+volatilitymin+';'+volatilitymax+';'+volatilityRange+';'+depth);
+				}else {
+					console.log("error work");
+					setTimeout(function(){self.work();},500);
+				}
+			},
+			initRange: function(){
+				var stor = window.localStorage;
+				if(typeof stor != 'undefined'){
+					var st = stor.getItem("sliders.time");
+					if(st!=null){
+						sliders.time.slider("value",st);
+						$("#w-timeSliderResult").text(st);
+					}
+
+					st = stor.getItem("sliders.rateIn");
+					if(st!=null){
+						var stOut = stor.getItem("sliders.rateOut");
+						$("#w-rateSliderResultIn").text(st);
+						$("#w-rateSliderResultOut").text(stOut);
+						sliders.rate.slider("values",[st,stOut]);
+					}
+
+					st = stor.getItem("sliders.procIn");
+					if(st!=null){
+						var stOut = stor.getItem("sliders.procOut");
+						sliders.proc.slider("values",[st,stOut]);
+						$("#w-procSliderResultIn").text(st);
+						$("#w-procSliderResultOut").text(stOut);
+					}
+					$("#w-time").val(stor.getItem("input.time"));
+					$("#w-rate").val(stor.getItem("input.rate"));
+					$("#w-proc").val(stor.getItem("input.proc"));
+					$("#w-label").val(stor.getItem("input.label"));
+					$("#minimum").val(stor.getItem("input.minimum"));
+					$("#volatilitymin").val(stor.getItem("input.volatilitymin"));
+					$("#volatilitymax").val(stor.getItem("input.volatilitymax"));
+
+				}
+			}
+		};
+		socket.initRange();
+		socket.buildRange();
+		return socket.build();
+	};
+
+	var ws;
+	$(function(){
+		ws = new wsock;
+	});
+
+
+	</script>
+  </body>
+</html>
